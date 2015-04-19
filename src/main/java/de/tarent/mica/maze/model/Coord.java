@@ -96,7 +96,7 @@ public class Coord implements Comparable<Coord>{
 
 	@Override
 	public int compareTo(Coord o) {
-		int c = Integer.compare(this.y, o.y);
+		int c = Integer.compare(this.y, o.y) * -1;
 		if(c == 0){
 			c = Integer.compare(this.x, o.x);
 		}
