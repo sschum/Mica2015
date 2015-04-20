@@ -43,6 +43,14 @@ public enum Type {
 		return isPlayer;
 	}
 
+	public Integer getButtonNumber(){
+		if(this.name().startsWith("BUTTON")){
+			return Integer.parseInt(this.name().replace("BUTTON", ""));
+		}
+
+		return null;
+	}
+
 	public static Type getButton(Integer btnNumber){
 		if(btnNumber == null) return null;
 

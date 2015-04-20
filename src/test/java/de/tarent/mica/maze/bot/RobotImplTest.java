@@ -487,4 +487,31 @@ public class RobotImplTest {
 				"#  1 <\n" +
 				"?  ##?");
 	}
+
+	@Test
+	public void handlePushed(){
+		toTest.world = mock(World.class);
+
+		toTest.handlePushed(new ActionSuccess());
+
+		verify(toTest.world).pushButton();
+	}
+
+	@Test
+	public void handleGot(){
+		toTest.world = mock(World.class);
+
+		toTest.handleGot(new ActionSuccess());
+
+		verify(toTest.world).putButton();
+	}
+
+	@Test
+	public void handleDroped(){
+		toTest.world = mock(World.class);
+
+		toTest.handleDroped(new ActionSuccess());
+
+		verify(toTest.world).dropButton();
+	}
 }

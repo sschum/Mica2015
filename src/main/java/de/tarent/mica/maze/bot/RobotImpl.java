@@ -127,19 +127,22 @@ public class RobotImpl extends AbstractRobot {
 
 	@Override
 	protected Action handlePushed(ActionSuccess event) {
-		// TODO Auto-generated method stub
+		world.pushButton();
+
 		return getNextAction();
 	}
 
 	@Override
 	protected Action handleGot(ActionSuccess event) {
-		// TODO Auto-generated method stub
+		world.putButton();
+
 		return getNextAction();
 	}
 
 	@Override
 	protected Action handleDroped(ActionSuccess event) {
-		// TODO Auto-generated method stub
+		world.dropButton();
+
 		return getNextAction();
 	}
 

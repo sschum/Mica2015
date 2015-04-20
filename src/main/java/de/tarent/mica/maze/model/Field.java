@@ -69,6 +69,20 @@ public class Field {
 		return null;
 	}
 
+	public void removeButton() {
+		Iterator<Type> iter = types.iterator();
+		while(iter.hasNext()){
+			if(iter.next().isButton()){
+				iter.remove();
+			}
+		}
+	}
+
+	public void setButton(Type button) {
+		removeButton();
+		types.add(button);
+	}
+
 	public void removePlayer() {
 		Iterator<Type> iter = types.iterator();
 		while(iter.hasNext()){
