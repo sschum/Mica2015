@@ -40,7 +40,7 @@ public class RobotImpl extends AbstractRobot {
 
 	@Override
 	protected Action handleWalked(ActionSuccess event) {
-		final Field playerField = world.getPlayerField();
+		final Field playerField = world.getMaze().getPlayerField();
 		final Type playerType = playerField.getPlayerType();
 
 		Coord newCoord = null;
@@ -70,16 +70,16 @@ public class RobotImpl extends AbstractRobot {
 	}
 
 	private Field getOrCreateField(Coord newCoord) {
-		if(!world.hasField(newCoord)){
-			world.putField(new Field(newCoord, Type.WAY));
+		if(!world.getMaze().hasField(newCoord)){
+			world.getMaze().putField(new Field(newCoord, Type.WAY));
 		}
 
-		return world.getField(newCoord);
+		return world.getMaze().getField(newCoord);
 	}
 
 	@Override
 	protected Action handleTurnedLeft(ActionSuccess event) {
-		final Field playerField = world.getPlayerField();
+		final Field playerField = world.getMaze().getPlayerField();
 		final Type playerType = playerField.getPlayerType();
 
 		final Type newPlayerType;
@@ -103,7 +103,7 @@ public class RobotImpl extends AbstractRobot {
 
 	@Override
 	protected Action handleTurnedRight(ActionSuccess event) {
-		final Field playerField = world.getPlayerField();
+		final Field playerField = world.getMaze().getPlayerField();
 		final Type playerType = playerField.getPlayerType();
 
 		final Type newPlayerType;
@@ -153,7 +153,7 @@ public class RobotImpl extends AbstractRobot {
 	}
 
 	private void handleLooked(LookActionSuccess event) {
-		final Field playerField = world.getPlayerField();
+		final Field playerField = world.getMaze().getPlayerField();
 		final Type playerType = playerField.getPlayerType();
 
 		Coord lastCoord = playerField.getCoord();
@@ -204,24 +204,24 @@ public class RobotImpl extends AbstractRobot {
 			}
 			lastCoord = newCoord;
 
-			if(!world.hasField(newCoord)){
+			if(!world.getMaze().hasField(newCoord)){
 				Field newField = new Field(newCoord,
 						lookField.isWall() ? Type.WALL : Type.WAY,
 						Type.getButton(lookField.getButtonNumber()));
 
-				world.putField(newField);
+				world.getMaze().putField(newField);
 			}
-			if(!world.hasField(leftCoord) && !lookField.isWall()){
+			if(!world.getMaze().hasField(leftCoord) && !lookField.isWall()){
 				Field leftField = new Field(leftCoord,
 						lookField.hasLeftBranch() ? Type.WAY : Type.WALL);
 
-				world.putField(leftField);
+				world.getMaze().putField(leftField);
 			}
-			if(!world.hasField(rightCoord) && !lookField.isWall()){
+			if(!world.getMaze().hasField(rightCoord) && !lookField.isWall()){
 				Field rightField = new Field(rightCoord,
 						lookField.hasRightBranch() ? Type.WAY : Type.WALL);
 
-				world.putField(rightField);
+				world.getMaze().putField(rightField);
 			}
 		}
 

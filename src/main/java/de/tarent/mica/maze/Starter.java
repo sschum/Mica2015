@@ -6,11 +6,13 @@ import java.io.IOException;
 import de.raysha.lib.jsimpleshell.Shell;
 import de.raysha.lib.jsimpleshell.builder.ShellBuilder;
 import de.raysha.lib.jsimpleshell.exception.CLIException;
+import de.tarent.mica.maze.cli.Commands;
 
 public class Starter {
 	public static void main(String[] args) throws IOException, CLIException {
 		final Shell shell = ShellBuilder.shell("RayMaze")
 								.behavior()
+									.addHandler(new Commands())
 								.build();
 
 		//print help text

@@ -7,13 +7,13 @@ import org.junit.Test;
 import de.tarent.mica.maze.model.Coord;
 import de.tarent.mica.maze.model.Field;
 import de.tarent.mica.maze.model.Type;
-import de.tarent.mica.maze.model.World;
+import de.tarent.mica.maze.model.Maze;
 
-public class WorldTest {
+public class MazeTest {
 
 	@Test
 	public void testGetPlayerField(){
-		final World world = generateTestWorld();
+		final Maze world = generateTestMaze();
 
 		final Field playerField = world.getPlayerField();
 
@@ -27,7 +27,7 @@ public class WorldTest {
 
 	@Test
 	public void testToString(){
-		final World world = generateTestWorld();
+		final Maze world = generateTestMaze();
 
 		assertEquals(
 				world.toString(),
@@ -39,7 +39,7 @@ public class WorldTest {
 
 	@Test
 	public void testToString_withUnknown(){
-		final World world = generateTestWorld();
+		final Maze world = generateTestMaze();
 		world.putField(new Field(new Coord(0, -2), Type.WALL));
 
 		assertEquals(
@@ -60,8 +60,8 @@ public class WorldTest {
 	 * ###|#
 	 * </pre>
 	 */
-	private World generateTestWorld() {
-		final World world = new World(
+	private Maze generateTestMaze() {
+		final Maze world = new Maze(
 			new Field(new Coord(-2, 2), Type.WALL), new Field(new Coord(-1, 2), Type.WALL), new Field(new Coord(0, 2), Type.WALL), new Field(new Coord(1, 2), Type.WALL),
 			new Field(new Coord(-2, 1), Type.WALL), new Field(new Coord(-1, 1), Type.BUTTON0), new Field(new Coord(0, 1), Type.WAY), new Field(new Coord(1, 1), Type.WALL),
 			new Field(new Coord(-2, 0), Type.WALL), new Field(new Coord(-1, 0), Type.WAY), new Field(new Coord(0, 0), Type.PLAYER_NORTH), new Field(new Coord(1, 0), Type.WALL),
