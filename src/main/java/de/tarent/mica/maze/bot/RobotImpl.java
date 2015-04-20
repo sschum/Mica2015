@@ -11,6 +11,7 @@ import de.tarent.mica.maze.model.Coord;
 import de.tarent.mica.maze.model.Field;
 import de.tarent.mica.maze.model.Type;
 import de.tarent.mica.maze.model.World;
+import de.tarent.mica.maze.util.LogFormat;
 
 /**
  * The Robot is simply responsible for updating the world.
@@ -307,7 +308,9 @@ public class RobotImpl extends AbstractRobot {
 
 	private Action getNextAction() {
 		final Action action = strategy.getNetxtAction(world);
-		log.info("Choose the action " + action.getClass().getSimpleName());
+
+		log.info(LogFormat.format("Choose the action r{0}",
+				action == null ? null : action.getClass().getSimpleName()));
 
 		return action;
 	}

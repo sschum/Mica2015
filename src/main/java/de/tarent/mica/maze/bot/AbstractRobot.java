@@ -21,14 +21,16 @@ public abstract class AbstractRobot implements Robot {
 
 	@Override
 	public Action handleEvent(Event event) {
-		Action action;
+		Action action = null;
 
-		if(event instanceof ActionSuccess){
-			action = handleActionSuccess((ActionSuccess)event);
-		}else if(event instanceof ActionFail){
-			action = handleActionFail((ActionFail)event);
-		}else{
+		if(history.isEmpty()){
 			action = handleStartEvent();
+		}else{
+			if(event instanceof ActionSuccess){
+				action = handleActionSuccess((ActionSuccess)event);
+			}else if(event instanceof ActionFail){
+				action = handleActionFail((ActionFail)event);
+			}
 		}
 
 		history.add(action);
