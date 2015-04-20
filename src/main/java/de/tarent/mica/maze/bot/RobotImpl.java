@@ -1,5 +1,7 @@
 package de.tarent.mica.maze.bot;
 
+import org.apache.log4j.Logger;
+
 import de.tarent.mica.maze.bot.action.Action;
 import de.tarent.mica.maze.bot.event.ActionFail;
 import de.tarent.mica.maze.bot.event.ActionSuccess;
@@ -18,6 +20,7 @@ import de.tarent.mica.maze.model.World;
  * @author rainu
  */
 public class RobotImpl extends AbstractRobot {
+	private static final Logger log = Logger.getLogger(RobotImpl.class);
 
 	World world;
 	private Strategy strategy;
@@ -35,11 +38,15 @@ public class RobotImpl extends AbstractRobot {
 
 	@Override
 	protected Action handleGameStarted(ActionSuccess event) {
+		log.info("Game started.");
+
 		return getNextAction();
 	}
 
 	@Override
 	protected Action handleWalked(ActionSuccess event) {
+		log.info("Walked.");
+
 		final Field playerField = world.getMaze().getPlayerField();
 		final Type playerType = playerField.getPlayerType();
 
@@ -79,6 +86,8 @@ public class RobotImpl extends AbstractRobot {
 
 	@Override
 	protected Action handleTurnedLeft(ActionSuccess event) {
+		log.info("Turned left.");
+
 		final Field playerField = world.getMaze().getPlayerField();
 		final Type playerType = playerField.getPlayerType();
 
@@ -103,6 +112,8 @@ public class RobotImpl extends AbstractRobot {
 
 	@Override
 	protected Action handleTurnedRight(ActionSuccess event) {
+		log.info("Turned right.");
+
 		final Field playerField = world.getMaze().getPlayerField();
 		final Type playerType = playerField.getPlayerType();
 
@@ -127,6 +138,8 @@ public class RobotImpl extends AbstractRobot {
 
 	@Override
 	protected Action handlePushed(ActionSuccess event) {
+		log.info("Pushed button.");
+
 		world.pushButton();
 
 		return getNextAction();
@@ -134,6 +147,8 @@ public class RobotImpl extends AbstractRobot {
 
 	@Override
 	protected Action handleGot(ActionSuccess event) {
+		log.info("Put button.");
+
 		world.putButton();
 
 		return getNextAction();
@@ -141,6 +156,8 @@ public class RobotImpl extends AbstractRobot {
 
 	@Override
 	protected Action handleDroped(ActionSuccess event) {
+		log.info("Droped button.");
+
 		world.dropButton();
 
 		return getNextAction();
@@ -148,6 +165,8 @@ public class RobotImpl extends AbstractRobot {
 
 	@Override
 	protected Action handleLooked(ActionSuccess event) {
+		log.info("Looked.");
+
 		if(event instanceof LookActionSuccess){
 			handleLooked((LookActionSuccess)event);
 		}// else -> i don't see anything!
@@ -232,54 +251,65 @@ public class RobotImpl extends AbstractRobot {
 
 	@Override
 	protected Action handleGameStartFailed(ActionFail event) {
-		// TODO Auto-generated method stub
+		log.error("Game start failed!");
+
 		return getNextAction();
 	}
 
 	@Override
 	protected Action handleWalkFailed(ActionFail event) {
-		// TODO Auto-generated method stub
+		log.error("Walk failed!");
+
 		return getNextAction();
 	}
 
 	@Override
 	protected Action handleTurnLeftFailed(ActionFail event) {
-		// TODO Auto-generated method stub
+		log.error("Turn left failed!");
+
 		return getNextAction();
 	}
 
 	@Override
 	protected Action handleTurnRightFailed(ActionFail event) {
-		// TODO Auto-generated method stub
+		log.error("Turn right failed!");
+
 		return getNextAction();
 	}
 
 	@Override
 	protected Action handlePushFailed(ActionFail event) {
-		// TODO Auto-generated method stub
+		log.error("Push failed!");
+
 		return getNextAction();
 	}
 
 	@Override
 	protected Action handleGetFailed(ActionFail event) {
-		// TODO Auto-generated method stub
+		log.error("Get failed!");
+
 		return getNextAction();
 	}
 
 	@Override
 	protected Action handleDropFailed(ActionFail event) {
-		// TODO Auto-generated method stub
+		log.error("Drop failed!");
+
 		return getNextAction();
 	}
 
 	@Override
 	protected Action handleLookFailed(ActionFail event) {
-		// TODO Auto-generated method stub
+		log.error("Look failed!");
+
 		return getNextAction();
 	}
 
 	private Action getNextAction() {
-		return strategy.getNetxtAction(world);
+		final Action action = strategy.getNetxtAction(world);
+		log.info("Choose the action " + action.getClass().getSimpleName());
+
+		return action;
 	}
 
 }
