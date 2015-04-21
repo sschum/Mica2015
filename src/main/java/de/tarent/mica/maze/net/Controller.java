@@ -15,6 +15,7 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 
 import de.tarent.mica.maze.bot.Robot;
 import de.tarent.mica.maze.bot.action.Action;
+import de.tarent.mica.maze.bot.action.StartGame;
 import de.tarent.mica.maze.bot.event.Event;
 import de.tarent.mica.maze.util.LogFormat;
 
@@ -25,6 +26,7 @@ public class Controller {
 	private final String host;
 	private final int port;
 	private final Robot robot;
+	private boolean waitForNewGame = false;
 
 	private CountDownLatch latch;
 
@@ -72,8 +74,21 @@ public class Controller {
     public void onMessage(Session session, String msg) throws IOException {
     	log.debug(LogFormat.format("Receive message: g{0}", msg));
 
+    	if(waitForNewGame){
+    		if(msg.contains("new game")){
+    			waitForNewGame = false;
+    			msg = "{\"result\" : \"ok\"}";
+    		}else{
+    			return;
+    		}
+    	}
+
         final Event event = Converter.getInstance().convertToEvent(msg);
         final Action action = robot.handleEvent(event);
+
+        if(action instanceof StartGame){
+        	waitForNewGame = true;
+        }
 
         final String answer = Converter.getInstance().convertToMessage(action);
 

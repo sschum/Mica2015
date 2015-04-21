@@ -69,6 +69,27 @@ public class Coord implements Comparable<Coord>{
 		return new Coord(x - 1, y);
 	}
 
+	public static enum Direction {
+		NORTH, EAST, SOUTH, WEST
+	}
+
+	/**
+	 * Create a new {@link Coord} instance that represents the
+	 * neighbor of this instance.
+	 *
+	 * @return A new neighbor {@link Coord}.
+	 */
+	public Coord neighbor(Direction dir){
+		switch (dir) {
+		case NORTH: return north();
+		case EAST: return east();
+		case SOUTH: return south();
+		case WEST: return west();
+		}
+
+		return null;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

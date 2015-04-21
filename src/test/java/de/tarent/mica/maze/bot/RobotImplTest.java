@@ -23,7 +23,7 @@ public class RobotImplTest {
 
 	@Before
 	public void setup(){
-		toTest = new RobotImpl(mock(Strategy.class));
+		toTest = new RobotImpl("rainu", mock(Strategy.class));
 	}
 
 	@Test

@@ -1,5 +1,7 @@
 package de.tarent.mica.maze.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -63,6 +65,20 @@ public class Maze {
 		}
 
 		return null;
+	}
+
+	public List<Field> getButtonFields() {
+		List<Field> result = new ArrayList<Field>();
+
+		for(Field f : maze.values()){
+			for(Type t : f.getTypes()){
+				if(t.isButton()){
+					result.add(f);
+				}
+			}
+		}
+
+		return result;
 	}
 
 	public boolean hasField(Coord newCoord) {

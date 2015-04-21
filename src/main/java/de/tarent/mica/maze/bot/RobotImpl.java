@@ -1,8 +1,11 @@
 package de.tarent.mica.maze.bot;
 
+import java.nio.charset.Charset;
+
 import org.apache.log4j.Logger;
 
 import de.tarent.mica.maze.bot.action.Action;
+import de.tarent.mica.maze.bot.action.StartGame;
 import de.tarent.mica.maze.bot.event.ActionFail;
 import de.tarent.mica.maze.bot.event.ActionSuccess;
 import de.tarent.mica.maze.bot.event.LookActionSuccess;
@@ -24,9 +27,11 @@ public class RobotImpl extends AbstractRobot {
 	private static final Logger log = Logger.getLogger(RobotImpl.class);
 
 	World world;
+	private String name;
 	private Strategy strategy;
 
-	public RobotImpl(Strategy strategy) {
+	public RobotImpl(String name, Strategy strategy) {
+		this.name = name;
 		this.strategy = strategy;
 	}
 
@@ -34,7 +39,7 @@ public class RobotImpl extends AbstractRobot {
 	protected Action handleStartEvent() {
 		world = new World();
 
-		return getNextAction();
+		return new StartGame(name);
 	}
 
 	@Override
@@ -74,6 +79,7 @@ public class RobotImpl extends AbstractRobot {
 		playerField.removePlayer();
 		movedField.setPlayer(playerType);
 
+		logWorld();
 		return getNextAction();
 	}
 
@@ -108,6 +114,7 @@ public class RobotImpl extends AbstractRobot {
 
 		playerField.setPlayer(newPlayerType);
 
+		logWorld();
 		return getNextAction();
 	}
 
@@ -134,6 +141,7 @@ public class RobotImpl extends AbstractRobot {
 
 		playerField.setPlayer(newPlayerType);
 
+		logWorld();
 		return getNextAction();
 	}
 
@@ -143,6 +151,7 @@ public class RobotImpl extends AbstractRobot {
 
 		world.pushButton();
 
+		logWorld();
 		return getNextAction();
 	}
 
@@ -152,6 +161,7 @@ public class RobotImpl extends AbstractRobot {
 
 		world.putButton();
 
+		logWorld();
 		return getNextAction();
 	}
 
@@ -161,6 +171,7 @@ public class RobotImpl extends AbstractRobot {
 
 		world.dropButton();
 
+		logWorld();
 		return getNextAction();
 	}
 
@@ -172,6 +183,7 @@ public class RobotImpl extends AbstractRobot {
 			handleLooked((LookActionSuccess)event);
 		}// else -> i don't see anything!
 
+		logWorld();
 		return getNextAction();
 	}
 
@@ -306,6 +318,12 @@ public class RobotImpl extends AbstractRobot {
 		return getNextAction();
 	}
 
+	private void logWorld(){
+		log.debug("\n" + world.toString()
+				.replace("#", new String(new byte[]{-79}, Charset.forName("CP850")))
+				.replace("?", new String(new byte[]{-73}, Charset.forName("CP1252"))));
+	}
+
 	private Action getNextAction() {
 		final Action action = strategy.getNetxtAction(world);
 
@@ -314,5 +332,4 @@ public class RobotImpl extends AbstractRobot {
 
 		return action;
 	}
-
 }

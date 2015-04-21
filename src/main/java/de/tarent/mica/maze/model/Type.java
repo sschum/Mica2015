@@ -57,6 +57,16 @@ public enum Type {
 		return Type.valueOf("BUTTON" + btnNumber);
 	}
 
+	public static Type fromView(char view){
+		for(Type t : Type.values()){
+			if(t.getView() == view){
+				return t;
+			}
+		}
+
+		return null;
+	}
+
 	@Override
 	public String toString() {
 		return "" + getView();

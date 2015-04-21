@@ -8,7 +8,7 @@ import de.raysha.lib.jsimpleshell.util.ColoredStringBuilder;
 
 public class LogFormat {
 
-	private static final Pattern PATTERN = Pattern.compile("(([a-z])(\\{[0-9]{1,}\\}))");
+	private static final Pattern PATTERN = Pattern.compile("(([a-zA-Z])(\\{[0-9]{1,}\\}))");
 	public static String format(String pattern, Object...args){
 		Matcher m = PATTERN.matcher(pattern);
 		String newPattern = pattern;
