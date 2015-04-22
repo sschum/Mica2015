@@ -1,6 +1,8 @@
 package de.tarent.mica.maze.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -13,6 +15,10 @@ public class Maze {
 	}
 
 	public Maze(Field...fields) {
+		this(Arrays.asList(fields));
+	}
+
+	public Maze(Collection<Field> fields) {
 		for(Field f : fields){
 			putField(f);
 		}
@@ -79,6 +85,16 @@ public class Maze {
 		}
 
 		return result;
+	}
+
+	public Field getButtonField(Type btnType) {
+		for(Field btnField : getButtonFields()){
+			if(btnField.getButtonType() == btnType){
+				return btnField;
+			}
+		}
+
+		return null;
 	}
 
 	public boolean hasField(Coord newCoord) {

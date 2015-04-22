@@ -44,6 +44,16 @@ public class Field {
 		return getButtonType() != null;
 	}
 
+	public boolean isWall() {
+		for(Type t : getTypes()){
+			if(t == Type.WALL){
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public Coord getCoord() {
 		return coord;
 	}
