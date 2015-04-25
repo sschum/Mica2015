@@ -1,4 +1,4 @@
-package de.tarent.mica.maze.bot.strategy;
+package de.tarent.mica.maze.bot.strategy.navigation;
 
 import static org.junit.Assert.assertTrue;
 
@@ -58,35 +58,11 @@ public class PathFinderTest {
 
 	@Test
 	public void testRealMaze(){
-		final Maze maze = MazeBuilder.fromString(
-			"#########################\n" +
-			"#^      #3 #            #\n" +
-			"####### #    ##### #### #\n" +
-			"#  #  # ####  #       # #\n" +
-			"# ### #    ## # ### # # #\n" +
-			"#     # #  ######## #   #\n" +
-			"# ##### ## #      # #####\n" +
-			"#        # #   1  #   # #\n" +
-			"###  ###   #      # ### #\n" +
-			"#2#  #9### # ###### #8# #\n" +
-			"# #  # #4           # # #\n" +
-			"# #  # ###### # # # #   #\n" +
-			"# #         #       ### #\n" +
-			"# ###### ## # # # #     #\n" +
-			"# #       # #    6  ### #\n" +
-			"# # ####0#### # # # #   #\n" +
-			"#   #  # #  #       # # #\n" +
-			"# #   #   #  #######  # #\n" +
-			"#  # #     #       # #  #\n" +
-			"#####       #### # # ####\n" +
-			"#5# # ####     # # #    #\n" +
-			"# #      # ### # # ## ###\n" +
-			"# ######## # # # #      #\n" +
-			"#          #     # #7## #\n" +
-			"#########################");
+		final Maze maze = MazeBuilder.testMaze();
+
+		final Coord start = maze.getPlayerField().getCoord();
 
 		for(int i=0; i <= 9; i++){
-			final Coord start = maze.getPlayerField().getCoord();
 			final Coord dest = maze.getButtonField(Type.getButton(i)).getCoord();
 
 			PathFinder pf = new PathFinder(maze, start, dest, TimeUnit.MILLISECONDS, 500);

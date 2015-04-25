@@ -84,6 +84,8 @@ public class Controller {
     	}
 
         final Event event = Converter.getInstance().convertToEvent(msg);
+        log.debug(LogFormat.format("Receive event: g{0}", event));
+
         final Action action = robot.handleEvent(event);
 
         if(action instanceof StartGame){

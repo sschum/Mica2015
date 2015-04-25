@@ -1,4 +1,4 @@
-package de.tarent.mica.maze.bot.strategy;
+package de.tarent.mica.maze.bot.strategy.navigation;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -44,5 +44,17 @@ public class LookActionSuccess extends ActionSuccess {
 		public Integer getButtonNumber() {
 			return buttonNumber;
 		}
+
+		@Override
+		public String toString() {
+			return "Field [isWall=" + isWall + ", hasLeftBranch="
+					+ hasLeftBranch + ", hasRightBranch=" + hasRightBranch
+					+ ", buttonNumber=" + buttonNumber + "]";
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "LookActionSuccess [fields=" + fields + "]";
 	}
 }

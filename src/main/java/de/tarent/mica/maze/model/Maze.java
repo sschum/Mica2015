@@ -97,6 +97,20 @@ public class Maze {
 		return null;
 	}
 
+	public List<Field> getWayFields(){
+		List<Field> result = new ArrayList<Field>();
+
+		for(Field f : maze.values()){
+			for(Type t : f.getTypes()){
+				if(t == Type.WAY){
+					result.add(f);
+				}
+			}
+		}
+
+		return result;
+	}
+
 	public boolean hasField(Coord newCoord) {
 		return maze.containsKey(newCoord);
 	}
@@ -154,6 +168,31 @@ public class Maze {
 		dim.setHeight(maxY - minY + 1);
 
 		return dim;
+	}
+
+	public boolean isCrossing(Coord coord) {
+		int neighbors = 0;
+
+		for(Direction d : Direction.values()){
+			Field f = getField(coord.neighbor(d));
+			if(f != null && !f.isWall()){
+				neighbors++;
+			}
+		}
+
+		/*
+		 *  No cross:
+		 *
+		 *  ###   ###
+		 *  #*    #*
+		 *  # #   ###
+		 *
+		 *  Corss:
+		 *  # #   # #
+		 *  #*     *
+		 *  # #   # #
+		 */
+		return neighbors >= 3;
 	}
 
 	@Override

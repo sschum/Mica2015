@@ -133,21 +133,24 @@ public class Converter {
 				final String fieldRaw = raw.get(String.valueOf(i)).toLowerCase();
 				Matcher buttonNumberMatcher = lookButtonNumberPattern.matcher(fieldRaw);
 
-				boolean right = fieldRaw.contains("l");
-				boolean left = fieldRaw.contains("r");
-				Integer button = buttonNumberMatcher.matches() ? Integer.parseInt(buttonNumberMatcher.group(1)) : null;
+				boolean isWall = fieldRaw.contains("#");
+				Field field;
 
-				Field field = new Field(
-						right,
-						left,
-						button);
+				if(isWall){
+					field = new Field();
+				}else{
+					boolean right = fieldRaw.contains("l");
+					boolean left = fieldRaw.contains("r");
+					Integer button = buttonNumberMatcher.matches() ? Integer.parseInt(buttonNumberMatcher.group(1)) : null;
+
+					field = new Field(
+							right,
+							left,
+							button);
+				}
 
 				result.getFields().add(i - 1, field);
 			}
-		}
-
-		if(result.getFields().size() < MAX_LOOK_RANGE){
-			result.getFields().add(new Field());
 		}
 
 		return result;

@@ -82,7 +82,7 @@ public class ConverterEventTest {
 	@Test
 	public void testLookActionSuccess() throws IOException {
 		final Event result = Converter.getInstance().convertToEvent(
-			"{ \"result\" : \"ok\", \"1\" : \" \",  \"2\" : \"l1r\", \"3\" : \"l\" }");
+			"{ \"result\" : \"ok\", \"1\" : \" \",  \"2\" : \"l1r\", \"3\" : \"l\", \"4\" : \"#\" }");
 
 		assertTrue(result instanceof LookActionSuccess);
 		assertTrue(4 == ((LookActionSuccess)result).getFields().size());
