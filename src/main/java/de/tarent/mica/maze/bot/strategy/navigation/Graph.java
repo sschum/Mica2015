@@ -259,17 +259,7 @@ public class Graph {
 		List<Coord> wayToCrossing = null;
 		Coord startCrossing = null;
 		for(Edge edge : startEdges){
-			List<Coord> way = new ArrayList<>(edge.getEdge());
-
-			Iterator<Coord> iter = way.iterator();
-			boolean found = false;
-
-			while(iter.hasNext()){
-				final Coord c = iter.next();
-
-				if(!found) iter.remove();
-				if(c.equals(start)) found = true;
-			}
+			List<Coord> way = getWayPartUntilEnd(edge, start);
 
 			if(wayToCrossing == null || wayToCrossing.size() > way.size()){
 				wayToCrossing = way;
@@ -281,17 +271,7 @@ public class Graph {
 		List<Coord> wayFromCrossing = null;
 		Coord destCrossing = null;
 		for(Edge edge : destEdges){
-			List<Coord> way = new ArrayList<>(edge.getEdge());
-
-			Iterator<Coord> iter = way.iterator();
-			boolean found = false;
-
-			while(iter.hasNext()){
-				final Coord c = iter.next();
-
-				if(found) iter.remove();
-				if(c.equals(start)) found = true;
-			}
+			List<Coord> way = getWayPartFromStart(edge, start);
 
 			if(wayFromCrossing == null || wayFromCrossing.size() > way.size()){
 				wayFromCrossing = way;
@@ -316,59 +296,83 @@ public class Graph {
 		return completeWay;
 	}
 
-	private List<Coord> getShortestWayCrossingToEdge(final Coord destination, Dijkstra d) {
-		List<Edge> edges = getEdges(destination);
-		List<Coord> way = null;
+	private List<Coord> getWayPartUntilEnd(Edge edge, Coord start){
+		List<Coord> way = new ArrayList<>(edge.getEdge());
 
-		for(Edge edge : edges){
-			//we don't know in which direction is right... so we test all..
-			List<Coord> lWay = d.getShortestWay(edge.getStart());
-			Iterator<Coord> iter = lWay.iterator();
-			boolean found = false;
+		Iterator<Coord> iter = way.iterator();
+		boolean found = false;
 
-			while(iter.hasNext()){
-				final Coord c = iter.next();
+		while(iter.hasNext()){
+			final Coord c = iter.next();
 
-				if(found) iter.remove();
-				if(c.equals(destination)) found = true;
-			}
-
-			if(way == null || lWay.size() < lWay.size()){
-				way = lWay;
-			}
+			if(!found) iter.remove();
+			if(c.equals(start)) found = true;
 		}
 
 		return way;
 	}
 
-	private List<Coord> getShortestWayEdgeToCrossing(final Coord start,
-			final Coord destination) {
-		Dijkstra d = new Dijkstra(destination, nodes);
+	private List<Coord> getWayPartFromStart(Edge edge, Coord dest){
+		List<Coord> way = new ArrayList<>(edge.getEdge());
 
-		//crossing to edge
-		List<Edge> edges = getEdges(start);
-		List<Coord> way = null;
+		Iterator<Coord> iter = way.iterator();
+		boolean found = false;
 
-		for(Edge edge : edges){
-			//we don't know in which direction is right... so we test all..
-			List<Coord> lWay = d.getShortestWay(edge.getStart());
-			Iterator<Coord> iter = lWay.iterator();
-			boolean found = false;
+		while(iter.hasNext()){
+			final Coord c = iter.next();
 
-			while(iter.hasNext()){
-				final Coord c = iter.next();
+			if(found) iter.remove();
+			if(c.equals(dest)) found = true;
+		}
 
-				if(found) iter.remove();
-				if(c.equals(start)) found = true;
-			}
+		return way;
+	}
 
-			if(way == null || lWay.size() < lWay.size()){
-				way = lWay;
+	private List<Coord> getShortestWayCrossingToEdge(final Coord destination, Dijkstra d) {
+		List<Edge> destEdges = getEdges(destination);
+		List<Coord> wayFromCrossing = null;
+		Coord destCrossing = null;
+		for(Edge edge : destEdges){
+			List<Coord> way = getWayPartFromStart(edge, edge.getStart());
+
+			if(wayFromCrossing == null || wayFromCrossing.size() > way.size()){
+				wayFromCrossing = way;
+				destCrossing = edge.getStart();
 			}
 		}
 
-		Collections.reverse(way);
-		return way;
+		List<Coord> completeWay = new LinkedList<>();
+		List<Coord> c2c = d.getShortestWay(destCrossing);
+
+		completeWay.addAll(c2c);
+		completeWay.addAll(wayFromCrossing);
+
+		return completeWay;
+	}
+
+	private List<Coord> getShortestWayEdgeToCrossing(final Coord start, final Coord destination) {
+		Dijkstra d = new Dijkstra(destination, nodes);
+
+		List<Edge> startEdges = getEdges(start);
+		List<Coord> wayToCrossing = null;
+		Coord startCrossing = null;
+		for(Edge edge : startEdges){
+			List<Coord> way = getWayPartUntilEnd(edge, start);
+
+			if(wayToCrossing == null || wayToCrossing.size() > way.size()){
+				wayToCrossing = way;
+				startCrossing = edge.getEnd();
+			}
+		}
+
+		List<Coord> completeWay = new ArrayList<>();
+		List<Coord> c2c = d.getShortestWay(startCrossing);
+		Collections.reverse(c2c);
+
+		completeWay.addAll(wayToCrossing);
+		completeWay.addAll(c2c);
+
+		return completeWay;
 	}
 
 	private boolean isNode(Coord coord) {
