@@ -1,6 +1,7 @@
 package de.tarent.mica.maze.bot.strategy.navigation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -149,6 +150,7 @@ public class Dijkstra {
 
 	public List<Coord> getShortestWay(Coord destination){
 		if(!table.containsKey(destination)) return null;
+		if(start.equals(destination)) return new ArrayList<>(Arrays.asList(destination));
 
 		final List<Coord> nodeWay = getNodes(destination);
 		final List<Coord> completeWay = new LinkedList<Coord>();

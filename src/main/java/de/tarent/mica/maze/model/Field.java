@@ -11,9 +11,12 @@ public class Field {
 	private Set<Type> types = new HashSet<>();
 
 	public Field(Coord coord, Type...types) {
-		super();
+		this(coord, Arrays.asList(types));
+	}
+
+	public Field(Coord coord, Collection<Type> types) {
 		this.coord = coord;
-		this.types.addAll(Arrays.asList(types));
+		this.types = new HashSet<>(types);
 
 		purge();
 		validate();

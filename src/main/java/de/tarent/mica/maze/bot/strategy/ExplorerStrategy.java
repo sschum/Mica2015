@@ -2,9 +2,11 @@ package de.tarent.mica.maze.bot.strategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 import java.util.TreeSet;
+
+import org.apache.log4j.Logger;
 
 import de.tarent.mica.maze.bot.action.Action;
 import de.tarent.mica.maze.bot.action.Look;
@@ -14,7 +16,9 @@ import de.tarent.mica.maze.bot.action.Walk;
 import de.tarent.mica.maze.bot.strategy.navigation.PathFinder;
 import de.tarent.mica.maze.model.Coord;
 import de.tarent.mica.maze.model.Field;
+import de.tarent.mica.maze.model.Maze;
 import de.tarent.mica.maze.model.World;
+import de.tarent.mica.maze.util.LogFormat;
 
 /**
  * This strategy tries to explore the maze until all buttons are
@@ -23,6 +27,7 @@ import de.tarent.mica.maze.model.World;
  * @author rainu
  */
 public class ExplorerStrategy implements Strategy {
+	private static final Logger log = Logger.getLogger(ExplorerStrategy.class);
 
 	private List<Coord> curPath;
 	private Coord curDest;
@@ -36,7 +41,7 @@ public class ExplorerStrategy implements Strategy {
 			return turnToDarkOrLookInto(world);
 		}
 
-		if(!haveMission()){
+		if(!haveMission(world)){
 			startNewMission(world);
 		}
 
@@ -139,8 +144,8 @@ public class ExplorerStrategy implements Strategy {
 		throw new IllegalStateException("This code should be never reached!");
 	}
 
-	private boolean haveMission() {
-		return (curPath != null && curPath.isEmpty()) || curDest != null;
+	private boolean haveMission(World world) {
+		return (curPath != null && !curPath.isEmpty()) || (curDest != null && !curDest.equals(world.getMaze().getPlayerField().getCoord()));
 	}
 
 	private Action continueMission(World world) {
@@ -182,13 +187,16 @@ public class ExplorerStrategy implements Strategy {
 		final Coord playerCoord = world.getMaze().getPlayerField().getCoord();
 		List<Coord> points = getPointsOfInterest(world);
 
+		if(points.isEmpty()){
+			throw new RuntimeException("No points of interests available!");
+		}
+
+		PathFinder pf = new PathFinder(world.getMaze());
 		for(Coord c : points){
-			PathFinder pf = new PathFinder(world.getMaze(), playerCoord, c);
-			List<List<Coord>> routes = pf.getRoutes();
-			if(routes != null && !routes.isEmpty()){
-				if(curPath == null || curPath.size() > routes.get(0).size()){
-					curPath = routes.get(0); //use shortest route
-				}
+			List<Coord> path = pf.getRoute(playerCoord, c);
+
+			if(curPath == null || curPath.isEmpty() || curPath.size() > path.size()){
+				curPath = path;
 			}
 		}
 
@@ -196,6 +204,9 @@ public class ExplorerStrategy implements Strategy {
 			curPath = new ArrayList<Coord>(curPath);
 			curPath.remove(0); //0 is the start position itself!
 		}
+
+		log.info(LogFormat.format("Points of interrests:\ny{0}", world.getMaze().toString((Collection<Coord>)points)));
+		log.info(LogFormat.format("Start new mission:\ny{0}", world.getMaze().toString(curPath)));
 	}
 
 	private Coord getCurrentDestination(World world) {
@@ -208,114 +219,19 @@ public class ExplorerStrategy implements Strategy {
 	}
 
 	protected List<Coord> getPointsOfInterest(World world){
-		List<Coord> pointsOfInterest = new ArrayList<Coord>(4);
+		final Maze maze = world.getMaze();
+		List<Coord> pointsOfInterest = new ArrayList<Coord>(maze.getWayFields().size());
 
-		final Field playerField = world.getMaze().getPlayerField();
-		switch(playerField.getPlayerType()){
-		case PLAYER_NORTH:
-			pointsOfInterest.add(getPointOfInterestInNorth(world));
-			pointsOfInterest.add(getPointOfInterestInEast(world));
-			pointsOfInterest.add(getPointOfInterestInWest(world));
-			pointsOfInterest.add(getPointOfInterestInSouth(world));
-			break;
-		case PLAYER_EAST:
-			pointsOfInterest.add(getPointOfInterestInEast(world));
-			pointsOfInterest.add(getPointOfInterestInNorth(world));
-			pointsOfInterest.add(getPointOfInterestInSouth(world));
-			pointsOfInterest.add(getPointOfInterestInWest(world));
-			break;
-		case PLAYER_SOUTH:
-			pointsOfInterest.add(getPointOfInterestInSouth(world));
-			pointsOfInterest.add(getPointOfInterestInEast(world));
-			pointsOfInterest.add(getPointOfInterestInWest(world));
-			pointsOfInterest.add(getPointOfInterestInNorth(world));
-			break;
-		case PLAYER_WEST:
-			pointsOfInterest.add(getPointOfInterestInWest(world));
-			pointsOfInterest.add(getPointOfInterestInNorth(world));
-			pointsOfInterest.add(getPointOfInterestInSouth(world));
-			pointsOfInterest.add(getPointOfInterestInEast(world));
-			break;
-		}
+		for(Field field : maze.getWayFields()){
+			if(	maze.getField(field.getCoord().north()) == null ||
+				maze.getField(field.getCoord().east()) == null ||
+				maze.getField(field.getCoord().south()) == null ||
+				maze.getField(field.getCoord().west()) == null){
 
-		Iterator<Coord> iter = pointsOfInterest.iterator();
-		while(iter.hasNext()){
-			if(iter.next() == null){
-				iter.remove();
+				pointsOfInterest.add(field.getCoord());
 			}
 		}
 
 		return pointsOfInterest;
-	}
-
-	private Coord getPointOfInterestInNorth(World world) {
-		Coord curCoord = world.getMaze().getPlayerField().getCoord();
-
-		for(int i=0; i < 5; i++){
-			curCoord = curCoord.north();
-
-			if(world.getMaze().getField(curCoord).isWall()){
-				break;
-			}
-			if(hasDarkNeighbor(world, curCoord)){
-				return curCoord;
-			}
-		}
-		return null;
-	}
-
-	private Coord getPointOfInterestInEast(World world) {
-		Coord curCoord = world.getMaze().getPlayerField().getCoord();
-
-		for(int i=0; i < 5; i++){
-			curCoord = curCoord.east();
-
-			if(world.getMaze().getField(curCoord).isWall()){
-				break;
-			}
-			if(hasDarkNeighbor(world, curCoord)){
-				return curCoord;
-			}
-		}
-		return null;
-	}
-
-	private Coord getPointOfInterestInSouth(World world) {
-		Coord curCoord = world.getMaze().getPlayerField().getCoord();
-
-		for(int i=0; i < 5; i++){
-			curCoord = curCoord.south();
-
-			if(world.getMaze().getField(curCoord).isWall()){
-				break;
-			}
-			if(hasDarkNeighbor(world, curCoord)){
-				return curCoord;
-			}
-		}
-		return null;
-	}
-
-	private Coord getPointOfInterestInWest(World world) {
-		Coord curCoord = world.getMaze().getPlayerField().getCoord();
-
-		for(int i=0; i < 5; i++){
-			curCoord = curCoord.west();
-
-			if(world.getMaze().getField(curCoord).isWall()){
-				break;
-			}
-			if(hasDarkNeighbor(world, curCoord)){
-				return curCoord;
-			}
-		}
-		return null;
-	}
-
-	private boolean hasDarkNeighbor(World world, Coord coord) {
-		return 	!world.getMaze().hasField(coord.north()) ||
-				!world.getMaze().hasField(coord.east()) ||
-				!world.getMaze().hasField(coord.south()) ||
-				!world.getMaze().hasField(coord.west());
 	}
 }

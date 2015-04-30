@@ -19,7 +19,9 @@ public enum Type {
 	BUTTON6('6', false, true),
 	BUTTON7('7', false, true),
 	BUTTON8('8', false, true),
-	BUTTON9('9', false, true);
+	BUTTON9('9', false, true),
+
+	POINT('*', false, false);
 
 	private char view;
 	private boolean isPlayer;

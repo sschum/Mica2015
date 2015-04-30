@@ -1,13 +1,15 @@
 package de.tarent.mica.maze.model;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class Maze {
+public class Maze implements Cloneable{
 	private SortedMap<Coord, Field> maze = new TreeMap<>();
 
 	public Maze(){
@@ -53,6 +55,14 @@ public class Maze {
 
 	public void putField(Coord coord, Type...types){
 		putField(new Field(coord, types));
+	}
+
+	public void putField(Coord coord, Collection<Type> types){
+		putField(new Field(coord, types));
+	}
+
+	public void removeField(Coord coord) {
+		maze.remove(coord);
 	}
 
 	public Field getPlayerField(){
@@ -193,6 +203,80 @@ public class Maze {
 		 *  # #   # #
 		 */
 		return neighbors >= 3;
+	}
+
+	@Override
+	public Maze clone(){
+		Maze dolly = new Maze();
+
+		for(Field field : this.maze.values()){
+			dolly.putField(field.getCoord(), field.getTypes());
+		}
+
+		return dolly;
+	}
+
+	public String toString(Collection<Coord> points){
+		final Maze m = this.clone();
+
+		m.getPlayerField().removePlayer();
+		for(Field f : m.getButtonFields()){
+			f.removeButton();
+		}
+
+		for(Coord p : points){
+			m.putField(p, Type.POINT);
+		}
+
+		return m.toString()
+				.replace("#", new String(new byte[]{-79}, Charset.forName("CP850")))
+				.replace("?", new String(new byte[]{-73}, Charset.forName("CP1252")));
+	}
+
+	public String toString(List<Coord> route){
+		List<Field> fields = new LinkedList<>();
+
+		Direction direction = Direction.NORTH;
+		for(int i=0; i < route.size(); i++){
+			final Coord curCoord = route.get(i);
+			final Coord nextCoord = i + 1 < route.size() ? route.get(i + 1) : null;
+
+			if(curCoord.north().equals(nextCoord)){
+				direction = Direction.NORTH;
+			}else if(curCoord.east().equals(nextCoord)){
+				direction = Direction.EAST;
+			}else if(curCoord.south().equals(nextCoord)){
+				direction = Direction.SOUTH;
+			}else if(curCoord.west().equals(nextCoord)){
+				direction = Direction.WEST;
+			}
+
+			switch(direction){
+			case NORTH:
+				fields.add(new Field(curCoord, Type.PLAYER_NORTH)); break;
+			case EAST:
+				fields.add(new Field(curCoord, Type.PLAYER_EAST)); break;
+			case SOUTH:
+				fields.add(new Field(curCoord, Type.PLAYER_SOUTH)); break;
+			case WEST:
+				fields.add(new Field(curCoord, Type.PLAYER_WEST)); break;
+			}
+		}
+
+		final Maze m = this.clone();
+
+		m.getPlayerField().removePlayer();
+		for(Field f : m.getButtonFields()){
+			f.removeButton();
+		}
+
+		for(Field f : fields){
+			m.putField(f);
+		}
+
+		return m.toString()
+				.replace("#", new String(new byte[]{-79}, Charset.forName("CP850")))
+				.replace("?", new String(new byte[]{-73}, Charset.forName("CP1252")));
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package de.tarent.mica.maze.bot.strategy.navigation;
 
 import static org.junit.Assert.*;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 
 import de.tarent.mica.maze.model.Coord;
+import de.tarent.mica.maze.model.Field;
 import de.tarent.mica.maze.model.Maze;
 import de.tarent.mica.maze.model.Type;
 import de.tarent.mica.maze.test.MazeBuilder;
@@ -84,6 +86,84 @@ public class GraphTest {
 	}
 
 	@Test
+	public void testAnalyse(){
+		testAnalyse(MazeBuilder.fromString(
+				"##########\n" +
+				"#        #\n" +
+				"#        #\n" +
+				"#        #\n" +
+				"#        #\n" +
+				"#        #\n" +
+				"#        #\n" +
+				"#        #\n" +
+				"#        #\n" +
+				"##########"));
+
+		testAnalyse(MazeBuilder.fromString(
+				"        \n" +
+				"        \n" +
+				"        \n" +
+				"        \n" +
+				"        \n" +
+				"        \n" +
+				"        \n" +
+				"        "));
+
+		testAnalyse(MazeBuilder.fromString(
+				"######\n" +
+				"#    ###\n" +
+				"#### # #\n" +
+				"# 1 0  #\n" +
+				"#  # ###\n" +
+				"######\n"));
+
+		testAnalyse(MazeBuilder.fromString(
+				   "   ?\n"+
+				   "# #?\n"+
+				   " 0 ?\n"+
+				   "# #?\n"+
+				   "   ?\n"+
+				   "#< #\n"+
+				   "?# ?"));
+
+		testAnalyse(MazeBuilder.fromString(
+				"?#####????\n" +
+				"#     #???\n" +
+				"# ### #???\n" +
+				"# #   #???\n" +
+				"# # ### ##\n" +
+				"#<#       \n" +
+				"#   ######\n" +
+				"? # #?????\n" +
+				"??# #?????\n" +
+				"??#  ?????"));
+	}
+
+	private void testAnalyse(final Maze maze) {
+		List<Field> fields = maze.getWayFields();
+		Graph g = new Graph(maze);
+
+		for(Entry<Route, Edge> entry : g.nodes.entrySet()){
+			remove(fields, entry.getValue().getStart());
+			remove(fields, entry.getValue().getEnd());
+			for(Coord coord : entry.getValue().getEdge()){
+				remove(fields, coord);
+			}
+		}
+
+		assertTrue(fields.toString(), fields.isEmpty());
+	}
+
+	private void remove(List<Field> fields, Coord c) {
+		Iterator<Field> iter = fields.iterator();
+		while(iter.hasNext()){
+			if(iter.next().getCoord().equals(c)){
+				iter.remove();
+			}
+		}
+	}
+
+	@Test
 	public void getShortestWay_CrossingToCrossing(){
 		/*
 		 *
@@ -116,6 +196,26 @@ public class GraphTest {
 		assertEquals(new Coord(3, -1), way.get(6));
 		assertEquals(new Coord(2, -1), way.get(7));
 		assertEquals(new Coord(1, -1), way.get(8));
+	}
+
+	@Test
+	public void getShortestWay_CrossingToCrossing2(){
+		final Maze maze = MazeBuilder.fromString(
+				"?##########?\n" +
+				"#          #\n" +
+				"# ######## #\n" +
+				"# #??????# #\n" +
+				" v#??????#6#\n" +
+				"   ???????#?\n" +
+				"#  ?????????\n" +
+				"?#??????????");
+
+		Graph graph = new Graph(maze);
+		List<Coord> way = graph.getShortestWay(new Coord(1, -4), new Coord(0, -4));
+
+		assertTrue(2 == way.size());
+		assertEquals(new Coord(1, -4), way.get(0));
+		assertEquals(new Coord(0, -4), way.get(1));
 	}
 
 	@Test
@@ -181,6 +281,46 @@ public class GraphTest {
 	}
 
 	@Test
+	public void getShortestWay_EdgeToCrossing2(){
+		final Maze maze = MazeBuilder.fromString(
+			   "   ?\n"+
+			   "# #?\n"+
+			   " 0 ?\n"+
+			   "# #?\n"+
+			   "   ?\n"+
+			   "#< #\n"+
+			   "?# ?");
+
+		Graph graph = new Graph(maze);
+		List<Coord> way = graph.getShortestWay(new Coord(1, -5), new Coord(2, -4));
+
+		assertTrue(3 == way.size());
+		assertEquals(new Coord(1, -5), way.get(0));
+		assertEquals(new Coord(1, -4), way.get(1));
+		assertEquals(new Coord(2, -4), way.get(2));
+	}
+
+	@Test
+	public void getShortestWay_EdgeToCrossing3(){
+		final Maze maze = MazeBuilder.fromString(
+				"???#  ?????\n" +
+				"???# #?????\n" +
+				"???# # ##  \n" +
+				"???# > 8   \n" +
+				"?### # ##  \n" +
+				"#2   #?????\n" +
+				"?### #?????\n" +
+				"???  #?????\n" +
+				"???  #?????\n" +
+				"????#??????");
+
+		Graph graph = new Graph(maze);
+		List<Coord> way = graph.getShortestWay(new Coord(5, -3), new Coord(5, 0));
+
+		assertEquals(new Coord(5, -3), way.get(0));
+	}
+
+	@Test
 	public void getShortestWay_EdgeToEdge(){
 		/*
 		 *
@@ -211,5 +351,62 @@ public class GraphTest {
 		assertEquals(new Coord(4, -3), way.get(4));
 		assertEquals(new Coord(5, -3), way.get(5));
 		assertEquals(new Coord(6, -3), way.get(6));
+	}
+
+	@Test
+	public void getShortestWay_EdgeToEdge2(){
+		final Maze maze = MazeBuilder.fromString(
+				"?#######\n" +
+				"# <     \n" +
+				"? # # # ");
+
+		Graph graph = new Graph(maze);
+		List<Coord> way = graph.getShortestWay(new Coord(2, -1), new Coord(7, -1));
+
+		assertTrue(6 == way.size());
+		assertEquals(new Coord(2, -1), way.get(0));
+		assertEquals(new Coord(3, -1), way.get(1));
+		assertEquals(new Coord(4, -1), way.get(2));
+		assertEquals(new Coord(5, -1), way.get(3));
+		assertEquals(new Coord(6, -1), way.get(4));
+		assertEquals(new Coord(7, -1), way.get(5));
+	}
+
+	@Test
+	public void getShortestWay_EdgeToEdge3(){
+		final Maze maze = MazeBuilder.fromString(
+				"?#####????\n" +
+				"#     #???\n" +
+				"# ### #???\n" +
+				"# #   #???\n" +
+				"# # ### ##\n" +
+				"#<#       \n" +
+				"#   ######\n" +
+				"? # #?????\n" +
+				"??# #?????\n" +
+				"??#  ?????");
+
+		Graph graph = new Graph(maze);
+		List<Coord> way = graph.getShortestWay(new Coord(1, -5), new Coord(3, -9));
+
+		assertTrue(7 == way.size());
+		assertEquals(new Coord(1, -5), way.get(0));
+		assertEquals(new Coord(1, -6), way.get(1));
+		assertEquals(new Coord(2, -6), way.get(2));
+		assertEquals(new Coord(3, -6), way.get(3));
+		assertEquals(new Coord(3, -7), way.get(4));
+		assertEquals(new Coord(3, -8), way.get(5));
+		assertEquals(new Coord(3, -9), way.get(6));
+
+		way = graph.getShortestWay(new Coord(3, -9), new Coord(1, -5));
+
+		assertTrue(7 == way.size());
+		assertEquals(new Coord(3, -9), way.get(0));
+		assertEquals(new Coord(3, -8), way.get(1));
+		assertEquals(new Coord(3, -7), way.get(2));
+		assertEquals(new Coord(3, -6), way.get(3));
+		assertEquals(new Coord(2, -6), way.get(4));
+		assertEquals(new Coord(1, -6), way.get(5));
+		assertEquals(new Coord(1, -5), way.get(6));
 	}
 }

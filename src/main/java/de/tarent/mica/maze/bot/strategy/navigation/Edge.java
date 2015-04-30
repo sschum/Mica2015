@@ -34,7 +34,7 @@ public class Edge {
 
 		for(int i=0; i < edge.size(); i++){
 			final Coord curCoord = edge.get(i);
-			final Coord prevCoord = i - 1 <= 0 ? route.getStart() : edge.get(i - 1);
+			final Coord prevCoord = i - 1 < 0 ? route.getStart() : edge.get(i - 1);
 			final Coord nextCoord = i + 1 >= edge.size() ? route.getEnd() : edge.get(i + 1);
 
 			if(isCurve(prevCoord, curCoord, nextCoord)){
