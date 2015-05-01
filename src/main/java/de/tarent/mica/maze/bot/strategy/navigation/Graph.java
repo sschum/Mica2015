@@ -261,7 +261,7 @@ public class Graph {
 		for(Edge edge : startEdges){
 			List<Coord> way = getWayPartUntilEnd(edge, start);
 
-			if(wayToCrossing == null || wayToCrossing.size() > way.size()){
+			if(wayToCrossing == null || (!way.isEmpty() && wayToCrossing.size() > way.size())){
 				wayToCrossing = way;
 				startCrossing = edge.getEnd();
 			}
@@ -273,7 +273,7 @@ public class Graph {
 		for(Edge edge : destEdges){
 			List<Coord> way = getWayPartFromStart(edge, start);
 
-			if(wayFromCrossing == null || wayFromCrossing.size() > way.size()){
+			if(wayFromCrossing == null || (!way.isEmpty() && wayFromCrossing.size() > way.size())){
 				wayFromCrossing = way;
 				destCrossing = edge.getStart();
 			}

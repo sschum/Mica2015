@@ -468,4 +468,45 @@ public class GraphTest {
 		assertEquals(new Coord(1, -6), way.get(5));
 		assertEquals(new Coord(1, -5), way.get(6));
 	}
+
+	@Test
+	public void getShortestWay_EdgeToEdge4(){
+		final Maze maze = MazeBuilder.fromString(
+				"?#####?############?#?##?\n" +
+				"#     #            # #  #\n" +
+				"# ### ##### # # ## # # #?\n" +
+				"# #   # #   # #   ##   #?\n" +
+				"# # ### ##### ###    #  #\n" +
+				"# #              ##### #?\n" +
+				"#   ###### # # # #      #\n" +
+				"#v#??#   #       # #####?\n" +
+				"# #??#   # # # # #      #\n" +
+				"# #??#   #       # #### #\n" +
+				"# #??#   # # # # # #    #\n" +
+				"# #??#   #       # # ## #\n" +
+				"#0 ??#     ######  # #  #\n" +
+				"????###### #   #  #  ###?\n" +
+				"???#       # ### #      #\n" +
+				"???#  ## # # # ##   ### #\n" +
+				"?### ##  # #        # # #\n" +
+				"#       #### # ##   # # #\n" +
+				"# ##### #    # # #  # # #\n" +
+				"# #???# #### # #  #   # #\n" +
+				"# #???#      # ##  ## # #\n" +
+				"# #???#      #    ##  # #\n" +
+				"# #???# ######## # #### #\n" +
+				"# #???  #          #    #\n" +
+				"?#?????#?##########?####?");
+
+		Graph graph = new Graph(maze);
+		List<Coord> way = graph.getShortestWay(maze.getPlayerField().getCoord(), maze.getButtonField(Type.BUTTON0).getCoord());
+
+		assertTrue(6 == way.size());
+		assertEquals(new Coord(1, -7), way.get(0));
+		assertEquals(new Coord(1, -8), way.get(1));
+		assertEquals(new Coord(1, -9), way.get(2));
+		assertEquals(new Coord(1, -10), way.get(3));
+		assertEquals(new Coord(1, -11), way.get(4));
+		assertEquals(new Coord(1, -12), way.get(5));
+	}
 }
