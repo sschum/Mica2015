@@ -241,6 +241,13 @@ public class Graph {
 			return getShortestWayEdgeToCrossing(start, destination);
 		}
 
+		for(Edge edge : nodes.values()){
+			if(wayIsInEdge(edge, start, destination)){
+				//edge itself
+				return getWayInEdge(edge, start, destination);
+			}
+		}
+
 		//edge to edge
 		List<Coord> firstWay = getShortestWayEdgeToEdge(start, destination);
 		List<Coord> secoundWay = getShortestWayEdgeToEdge(destination, start);
@@ -284,22 +291,27 @@ public class Graph {
 		completeWay.addAll(getShortestWay(startCrossing, destCrossing));
 		completeWay.addAll(wayFromCrossing);
 
-		Iterator<Coord> iter = completeWay.iterator();
-		boolean found = false;
-		while(iter.hasNext()){
-			final Coord c = iter.next();
-
-			if(found) iter.remove();
-			if(c.equals(destination)) found = true;
-		}
+		cutEnd(completeWay, destination);
 
 		return completeWay;
 	}
 
 	private List<Coord> getWayPartUntilEnd(Edge edge, Coord start){
 		List<Coord> way = new ArrayList<>(edge.getEdge());
+		cutStart(way, start);
 
-		Iterator<Coord> iter = way.iterator();
+		return way;
+	}
+
+	private List<Coord> getWayPartFromStart(Edge edge, Coord dest){
+		List<Coord> way = new ArrayList<>(edge.getEdge());
+		cutEnd(way, dest);
+
+		return way;
+	}
+
+	private void cutStart(List<Coord> list, Coord start) {
+		Iterator<Coord> iter = list.iterator();
 		boolean found = false;
 
 		while(iter.hasNext()){
@@ -308,14 +320,10 @@ public class Graph {
 			if(!found) iter.remove();
 			if(c.equals(start)) found = true;
 		}
-
-		return way;
 	}
 
-	private List<Coord> getWayPartFromStart(Edge edge, Coord dest){
-		List<Coord> way = new ArrayList<>(edge.getEdge());
-
-		Iterator<Coord> iter = way.iterator();
+	private void cutEnd(List<Coord> list, Coord dest) {
+		Iterator<Coord> iter = list.iterator();
 		boolean found = false;
 
 		while(iter.hasNext()){
@@ -324,6 +332,39 @@ public class Graph {
 			if(found) iter.remove();
 			if(c.equals(dest)) found = true;
 		}
+	}
+
+	private boolean wayIsInEdge(Edge edge, Coord start, Coord dest) {
+		Set<Coord> completeWay = new HashSet<Coord>(edge.getEdge().size() + 2);
+		completeWay.add(edge.getStart());
+		completeWay.addAll(edge.getEdge());
+		completeWay.add(edge.getEnd());
+
+		return completeWay.contains(start) && completeWay.contains(dest);
+	}
+
+	private List<Coord> getWayInEdge(Edge edge, Coord start, Coord destination) {
+		List<Coord> way = new ArrayList<Coord>();
+		way.add(edge.getStart());
+		way.addAll(edge.getEdge());
+		way.add(edge.getEnd());
+
+		boolean reverse = false;
+
+		for(Coord c : way){
+			if(c.equals(start) || c.equals(destination)){
+				if(c.equals(destination)){
+					reverse = true;
+				}
+
+				break;
+			}
+		}
+
+		if(reverse) Collections.reverse(way);
+
+		cutStart(way, start);
+		cutEnd(way, destination);
 
 		return way;
 	}

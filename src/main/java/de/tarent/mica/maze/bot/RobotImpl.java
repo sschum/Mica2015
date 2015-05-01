@@ -246,15 +246,13 @@ public class RobotImpl extends AbstractRobot {
 
 				world.getMaze().putField(newField);
 			}
-			if(!world.getMaze().hasField(leftCoord) && !lookField.isWall()){
-				Field leftField = new Field(leftCoord,
-						lookField.hasLeftBranch() ? Type.WAY : Type.WALL);
+			if(!world.getMaze().hasField(leftCoord) && !lookField.isWall() && !lookField.hasLeftBranch()){
+				Field leftField = new Field(leftCoord, Type.WALL);
 
 				world.getMaze().putField(leftField);
 			}
-			if(!world.getMaze().hasField(rightCoord) && !lookField.isWall()){
-				Field rightField = new Field(rightCoord,
-						lookField.hasRightBranch() ? Type.WAY : Type.WALL);
+			if(!world.getMaze().hasField(rightCoord) && !lookField.isWall() && !lookField.hasRightBranch()){
+				Field rightField = new Field(rightCoord, Type.WALL);
 
 				world.getMaze().putField(rightField);
 			}

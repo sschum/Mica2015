@@ -34,7 +34,10 @@ public class ExplorerStrategy implements Strategy {
 
 	@Override
 	public Action getNetxtAction(World world) {
-		if(isDiscovered(world)) return null;
+		if(isDiscovered(world)){
+			System.out.println("DISCOVERED!");
+			return null;
+		}
 
 		if(isDarkAroundMe(world)){
 			//look in the dark direction
