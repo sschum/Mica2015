@@ -52,6 +52,7 @@ public class RobotImpl extends AbstractRobot {
 	@Override
 	protected Action handleWalked(ActionSuccess event) {
 		log.info("Walked.");
+		world.increasAction();
 
 		final Field playerField = world.getMaze().getPlayerField();
 		final Type playerType = playerField.getPlayerType();
@@ -94,6 +95,7 @@ public class RobotImpl extends AbstractRobot {
 	@Override
 	protected Action handleTurnedLeft(ActionSuccess event) {
 		log.info("Turned left.");
+		world.increasAction();
 
 		final Field playerField = world.getMaze().getPlayerField();
 		final Type playerType = playerField.getPlayerType();
@@ -121,6 +123,7 @@ public class RobotImpl extends AbstractRobot {
 	@Override
 	protected Action handleTurnedRight(ActionSuccess event) {
 		log.info("Turned right.");
+		world.increasAction();
 
 		final Field playerField = world.getMaze().getPlayerField();
 		final Type playerType = playerField.getPlayerType();
@@ -148,6 +151,7 @@ public class RobotImpl extends AbstractRobot {
 	@Override
 	protected Action handlePushed(ActionSuccess event) {
 		log.info("Pushed button.");
+		world.increasAction();
 
 		world.pushButton();
 
@@ -158,6 +162,7 @@ public class RobotImpl extends AbstractRobot {
 	@Override
 	protected Action handleGot(ActionSuccess event) {
 		log.info("Put button.");
+		world.increasAction();
 
 		world.putButton();
 
@@ -168,6 +173,7 @@ public class RobotImpl extends AbstractRobot {
 	@Override
 	protected Action handleDroped(ActionSuccess event) {
 		log.info("Droped button.");
+		world.increasAction();
 
 		world.dropButton();
 
@@ -178,6 +184,7 @@ public class RobotImpl extends AbstractRobot {
 	@Override
 	protected Action handleLooked(ActionSuccess event) {
 		log.info("Looked.");
+		world.increasAction();
 
 		if(event instanceof LookActionSuccess){
 			handleLooked((LookActionSuccess)event);
@@ -270,6 +277,7 @@ public class RobotImpl extends AbstractRobot {
 	@Override
 	protected Action handleWalkFailed(ActionFail event) {
 		log.error("Walk failed!");
+		world.increasAction();
 
 		return getNextAction();
 	}
@@ -277,6 +285,7 @@ public class RobotImpl extends AbstractRobot {
 	@Override
 	protected Action handleTurnLeftFailed(ActionFail event) {
 		log.error("Turn left failed!");
+		world.increasAction();
 
 		return getNextAction();
 	}
@@ -284,6 +293,7 @@ public class RobotImpl extends AbstractRobot {
 	@Override
 	protected Action handleTurnRightFailed(ActionFail event) {
 		log.error("Turn right failed!");
+		world.increasAction();
 
 		return getNextAction();
 	}
@@ -291,6 +301,7 @@ public class RobotImpl extends AbstractRobot {
 	@Override
 	protected Action handlePushFailed(ActionFail event) {
 		log.error("Push failed!");
+		world.increasAction();
 
 		return getNextAction();
 	}
@@ -298,6 +309,7 @@ public class RobotImpl extends AbstractRobot {
 	@Override
 	protected Action handleGetFailed(ActionFail event) {
 		log.error("Get failed!");
+		world.increasAction();
 
 		return getNextAction();
 	}
@@ -305,6 +317,7 @@ public class RobotImpl extends AbstractRobot {
 	@Override
 	protected Action handleDropFailed(ActionFail event) {
 		log.error("Drop failed!");
+		world.increasAction();
 
 		return getNextAction();
 	}
@@ -312,6 +325,7 @@ public class RobotImpl extends AbstractRobot {
 	@Override
 	protected Action handleLookFailed(ActionFail event) {
 		log.error("Look failed!");
+		world.increasAction();
 
 		return getNextAction();
 	}

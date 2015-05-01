@@ -5,6 +5,7 @@ public class World {
 	Maze maze;
 	Integer inventarButton;
 	Integer lastPushedButton;
+	Integer actionCount;
 
 	public World() {
 		maze = new Maze();
@@ -60,10 +61,22 @@ public class World {
 		}
 	}
 
+	public Integer getActionCount() {
+		return actionCount;
+	}
+	public void increasAction(){
+		if(actionCount == null){
+			actionCount = 0;
+		}
+
+		actionCount++;
+	}
+
 	@Override
 	public String toString() {
 		return "Inventar: " + (inventarButton != null ? inventarButton : "-") +
 				" Last pushed: " + (lastPushedButton != null ? lastPushedButton : "-") +
+				" Actions: " + (actionCount != null ? actionCount : "-") +
 				"\n" + maze;
 	}
 }
