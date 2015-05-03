@@ -1,5 +1,6 @@
 package de.tarent.mica.maze.bot.strategy;
 
+import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -22,7 +23,7 @@ public class ExplorerStrategyTest {
 
 	@Before
 	public void setup(){
-		toTest = new ExplorerStrategy();
+		toTest = new ExplorerStrategy(new PathWalkerStrategy());
 	}
 
 	@Test
@@ -60,6 +61,41 @@ public class ExplorerStrategyTest {
 		world.pushButton();
 
 		assertTrue(toTest.isDiscovered(world));
+	}
+
+	@Test
+	public void isDiscovered_fourPushed(){
+		World world = new World(MazeBuilder.fromString(
+			"?####????????????#####???\n" +
+			"#   >#??????????#     #??\n" +
+			"# ###???????##### # # #??\n" +
+			"# #  #???? #      # ##???\n" +
+			"# # ##???# #      # # #??\n" +
+			"# #   #??# # #### #   #??\n" +
+			"# # #  #?# #   2# #####??\n" +
+			"# # #   ## # ####      ??\n" +
+			"# # #    7   #6#  ##?###?\n" +
+			"# ###   ## # # # ##??# 3#\n" +
+			"#      #??## #      ?#  #\n" +
+			"?###  #??#   # #####?# #?\n" +
+			"#  # # ??#####     ##   #\n" +
+			"# ## # #?      #  ?#  # #\n" +
+			"#    # # # # # #  ??### #\n" +
+			"# #### #       # 1?#  # #\n" +
+			"#      # # # # #  ??# # #\n" +
+			"?##### #  9    #  ??# # #\n" +
+			"#      # # # # ######   #\n" +
+			"?# #####              # #\n" +
+			"#0 #    ### ##### ### # #\n" +
+			"?#   ##   # #  8# #   # #\n" +
+			"?# # #?## # # ##### ### #\n" +
+			"?? # #            #     #\n" +
+			"????#?############?#####?"));
+
+		world = spy(world);
+		doReturn(4).when(world).getLastPushedButton();
+
+		assertFalse(toTest.isDiscovered(world));
 	}
 
 	@Test

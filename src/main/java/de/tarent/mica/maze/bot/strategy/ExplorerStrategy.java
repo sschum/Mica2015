@@ -2,7 +2,6 @@ package de.tarent.mica.maze.bot.strategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -12,13 +11,10 @@ import de.tarent.mica.maze.bot.action.Action;
 import de.tarent.mica.maze.bot.action.Look;
 import de.tarent.mica.maze.bot.action.TurnLeft;
 import de.tarent.mica.maze.bot.action.TurnRight;
-import de.tarent.mica.maze.bot.action.Walk;
-import de.tarent.mica.maze.bot.strategy.navigation.PathFinder;
 import de.tarent.mica.maze.model.Coord;
 import de.tarent.mica.maze.model.Field;
 import de.tarent.mica.maze.model.Maze;
 import de.tarent.mica.maze.model.World;
-import de.tarent.mica.maze.util.LogFormat;
 
 /**
  * This strategy tries to explore the maze until all buttons are
@@ -26,16 +22,17 @@ import de.tarent.mica.maze.util.LogFormat;
  *
  * @author rainu
  */
-public class ExplorerStrategy implements Strategy {
+public class ExplorerStrategy extends AbstractStrategy{
 	private static final Logger log = Logger.getLogger(ExplorerStrategy.class);
 
-	private List<Coord> curPath;
-	private Coord curDest;
+	public ExplorerStrategy(PathWalkerStrategy walker) {
+		super(walker);
+	}
 
 	@Override
-	public Action getNetxtAction(World world) {
+	public Action getNextAction(World world) {
 		if(isDiscovered(world)){
-			System.out.println("DISCOVERED!");
+			log.info("Maze is discovered. I'm out!");
 			return null;
 		}
 
@@ -44,18 +41,13 @@ public class ExplorerStrategy implements Strategy {
 			return turnToDarkOrLookInto(world);
 		}
 
-		if(!haveMission(world)){
-			startNewMission(world);
-		}
-
-		return continueMission(world);
+		return super.getNextAction(world);
 	}
 
 	boolean isDiscovered(World world) {
 		List<Field> buttonFields = world.getMaze().getButtonFields();
 		int btnCount = world.getInventarButton() != null ? 1 : 0;
 		btnCount += buttonFields.size();
-		btnCount += world.getLastPushedButton() != null ? world.getLastPushedButton() : 0;
 
 		return btnCount >= 10;
 	}
@@ -147,80 +139,7 @@ public class ExplorerStrategy implements Strategy {
 		throw new IllegalStateException("This code should be never reached!");
 	}
 
-	private boolean haveMission(World world) {
-		return (curPath != null && !curPath.isEmpty()) || (curDest != null && !curDest.equals(world.getMaze().getPlayerField().getCoord()));
-	}
-
-	private Action continueMission(World world) {
-		final Coord dest = getCurrentDestination(world);
-		final Field playerField = world.getMaze().getPlayerField();
-		final Coord pCoord = playerField.getCoord();
-
-		switch(playerField.getPlayerType()){
-		case PLAYER_NORTH:
-			if(pCoord.north().equals(dest)) return new Walk();
-			if(pCoord.east().equals(dest)) return new TurnRight();
-			if(pCoord.south().equals(dest)) return new TurnRight();
-			if(pCoord.west().equals(dest)) return new TurnLeft();
-			break;
-		case PLAYER_EAST:
-			if(pCoord.east().equals(dest)) return new Walk();
-			if(pCoord.south().equals(dest)) return new TurnRight();
-			if(pCoord.west().equals(dest)) return new TurnLeft();
-			if(pCoord.north().equals(dest)) return new TurnRight();
-			break;
-		case PLAYER_SOUTH:
-			if(pCoord.south().equals(dest)) return new Walk();
-			if(pCoord.west().equals(dest)) return new TurnRight();
-			if(pCoord.north().equals(dest)) return new TurnRight();
-			if(pCoord.east().equals(dest)) return new TurnLeft();
-			break;
-		case PLAYER_WEST:
-			if(pCoord.west().equals(dest)) return new Walk();
-			if(pCoord.north().equals(dest)) return new TurnRight();
-			if(pCoord.east().equals(dest)) return new TurnRight();
-			if(pCoord.south().equals(dest)) return new TurnLeft();
-			break;
-		}
-
-		return null;
-	}
-
-	private void startNewMission(World world) {
-		final Coord playerCoord = world.getMaze().getPlayerField().getCoord();
-		List<Coord> points = getPointsOfInterest(world);
-
-		if(points.isEmpty()){
-			throw new RuntimeException("No points of interests available!");
-		}
-
-		PathFinder pf = new PathFinder(world.getMaze());
-		for(Coord c : points){
-			List<Coord> path = pf.getRoute(playerCoord, c);
-
-			if(curPath == null || curPath.isEmpty() || curPath.size() > path.size()){
-				curPath = path;
-			}
-		}
-
-		if(curPath != null){
-			curPath = new ArrayList<Coord>(curPath);
-			curPath.remove(0); //0 is the start position itself!
-		}
-
-		log.info(LogFormat.format("Points of interrests:\ny{0}", world.getMaze().toString((Collection<Coord>)points)));
-		log.info(LogFormat.format("Start new mission:\ny{0}", world.getMaze().toString(curPath)));
-	}
-
-	private Coord getCurrentDestination(World world) {
-		if(curDest == null || curDest.equals(world.getMaze().getPlayerField().getCoord())){
-			curDest = curPath.get(0);
-			curPath.remove(0);
-		}
-
-		return curDest;
-	}
-
+	@Override
 	protected List<Coord> getPointsOfInterest(World world){
 		final Maze maze = world.getMaze();
 		List<Coord> pointsOfInterest = new ArrayList<Coord>(maze.getWayFields().size());

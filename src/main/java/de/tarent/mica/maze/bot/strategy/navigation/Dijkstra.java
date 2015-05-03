@@ -49,7 +49,7 @@ public class Dijkstra {
 			TableEntry curEntry = table.get(curNode);
 			for(Edge neighbor : neighbors){
 				TableEntry neighborEntry = table.get(neighbor.getEnd());
-				int sumDistance = curEntry.distance + neighbor.getWeight();
+				int sumDistance = curEntry.distance + getWeight(curNode, neighbor);
 				if(neighborEntry.distance == null || sumDistance < neighborEntry.distance){
 					neighborEntry.distance = sumDistance;
 					neighborEntry.prenode = curNode;
@@ -142,6 +142,10 @@ public class Dijkstra {
 		}
 
 		return result;
+	}
+
+	private Integer getWeight(Coord curNode, Edge neighbor) {
+		return neighbor.getWeight();
 	}
 
 	private void markAsVisited(Coord node) {

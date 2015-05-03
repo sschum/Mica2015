@@ -11,4 +11,9 @@ public class Event {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName();
+	}
 }

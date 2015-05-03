@@ -337,7 +337,7 @@ public class RobotImpl extends AbstractRobot {
 	}
 
 	private Action getNextAction() {
-		final Action action = strategy.getNetxtAction(world);
+		final Action action = strategy.getNextAction(world);
 
 		log.info(LogFormat.format("Choose the action r{0}",
 				action == null ? null : action.getClass().getSimpleName()));
