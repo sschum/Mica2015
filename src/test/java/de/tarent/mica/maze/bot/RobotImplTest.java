@@ -218,8 +218,7 @@ public class RobotImplTest {
 		assertEquals(
 				new Field(new Coord(0, 1), Type.WAY),
 				toTest.world.getMaze().getField(new Coord(0, 1)));
-		assertEquals(
-				new Field(new Coord(1, 1), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(1, 1)));
 
 		assertEquals(
@@ -232,8 +231,7 @@ public class RobotImplTest {
 				new Field(new Coord(1, 2), Type.WALL),
 				toTest.world.getMaze().getField(new Coord(1, 2)));
 
-		assertEquals(
-				new Field(new Coord(-1, 3), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(-1, 3)));
 		assertEquals(
 				new Field(new Coord(0, 3), Type.WAY),
@@ -242,14 +240,12 @@ public class RobotImplTest {
 				new Field(new Coord(1, 3), Type.WALL),
 				toTest.world.getMaze().getField(new Coord(1, 3)));
 
-		assertEquals(
-				new Field(new Coord(-1, 4), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(-1, 4)));
 		assertEquals(
 				new Field(new Coord(0, 4), Type.WAY),
 				toTest.world.getMaze().getField(new Coord(0, 4)));
-		assertEquals(
-				new Field(new Coord(1, 4), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(1, 4)));
 
 		assertEquals(
@@ -259,10 +255,10 @@ public class RobotImplTest {
 		assertEquals(
 				toTest.world.getMaze().toString(),
 				"?#?\n" +
-				"   \n" +
-				"  #\n" +
+				"? ?\n" +
+				"? #\n" +
 				"#1#\n" +
-				"#  \n" +
+				"# ?\n" +
 				"?^?");
 	}
 
@@ -293,8 +289,7 @@ public class RobotImplTest {
 		assertEquals(
 				new Field(new Coord(1, 0), Type.WAY),
 				toTest.world.getMaze().getField(new Coord(1, 0)));
-		assertEquals(
-				new Field(new Coord(1, -1), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(1, -1)));
 
 		assertEquals(
@@ -307,8 +302,7 @@ public class RobotImplTest {
 				new Field(new Coord(2, -1), Type.WALL),
 				toTest.world.getMaze().getField(new Coord(2, -1)));
 
-		assertEquals(
-				new Field(new Coord(3, 1), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(3, 1)));
 		assertEquals(
 				new Field(new Coord(3, 0), Type.WAY),
@@ -317,14 +311,12 @@ public class RobotImplTest {
 				new Field(new Coord(3, -1), Type.WALL),
 				toTest.world.getMaze().getField(new Coord(3, -1)));
 
-		assertEquals(
-				new Field(new Coord(4, 1), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(4, 1)));
 		assertEquals(
 				new Field(new Coord(4, 0), Type.WAY),
 				toTest.world.getMaze().getField(new Coord(4, 0)));
-		assertEquals(
-				new Field(new Coord(4, -1), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(4, -1)));
 
 		assertEquals(
@@ -333,9 +325,9 @@ public class RobotImplTest {
 
 		assertEquals(
 				toTest.world.getMaze().toString(),
-				"?##  ?\n" +
+				"?##???\n" +
 				"> 1  #\n" +
-				"? ## ?");
+				"??##??");
 	}
 
 	@Test
@@ -362,8 +354,7 @@ public class RobotImplTest {
 
 		toTest.handleLooked(event);
 
-		assertEquals(
-				new Field(new Coord(-1, -1), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(-1, -1)));
 		assertEquals(
 				new Field(new Coord(0, -1), Type.WAY),
@@ -388,18 +379,15 @@ public class RobotImplTest {
 		assertEquals(
 				new Field(new Coord(0, -3), Type.WAY),
 				toTest.world.getMaze().getField(new Coord(0, -3)));
-		assertEquals(
-				new Field(new Coord(1, -3), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(1, -3)));
 
-		assertEquals(
-				new Field(new Coord(-1, -4), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(-1, -4)));
 		assertEquals(
 				new Field(new Coord(0, -4), Type.WAY),
 				toTest.world.getMaze().getField(new Coord(0, -4)));
-		assertEquals(
-				new Field(new Coord(1, -4), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(1, -4)));
 
 		assertEquals(
@@ -409,10 +397,10 @@ public class RobotImplTest {
 		assertEquals(
 				toTest.world.getMaze().toString(),
 				"?v?\n" +
-				"  #\n" +
+				"? #\n" +
 				"#1#\n" +
-				"#  \n" +
-				"   \n" +
+				"# ?\n" +
+				"? ?\n" +
 				"?#?");
 	}
 
@@ -437,8 +425,7 @@ public class RobotImplTest {
 
 		toTest.handleLooked(event);
 
-		assertEquals(
-				new Field(new Coord(-1, 1), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(-1, 1)));
 		assertEquals(
 				new Field(new Coord(-1, 0), Type.WAY),
@@ -463,18 +450,15 @@ public class RobotImplTest {
 		assertEquals(
 				new Field(new Coord(-3, 0), Type.WAY),
 				toTest.world.getMaze().getField(new Coord(-3, 0)));
-		assertEquals(
-				new Field(new Coord(-3, -1), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(-3, -1)));
 
-		assertEquals(
-				new Field(new Coord(-4, 1), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(-4, 1)));
 		assertEquals(
 				new Field(new Coord(-4, 0), Type.WAY),
 				toTest.world.getMaze().getField(new Coord(-4, 0)));
-		assertEquals(
-				new Field(new Coord(-4, -1), Type.WAY),
+		assertNull(
 				toTest.world.getMaze().getField(new Coord(-4, -1)));
 
 		assertEquals(
@@ -483,9 +467,9 @@ public class RobotImplTest {
 
 		assertEquals(
 				toTest.world.getMaze().toString(),
-				"? ## ?\n" +
+				"??##??\n" +
 				"#  1 <\n" +
-				"?  ##?");
+				"???##?");
 	}
 
 	@Test
@@ -498,20 +482,11 @@ public class RobotImplTest {
 	}
 
 	@Test
-	public void handleGot(){
-		toTest.world = mock(World.class);
-
-		toTest.handleGot(new ActionSuccess());
-
-		verify(toTest.world).putButton();
-	}
-
-	@Test
 	public void handleDroped(){
 		toTest.world = mock(World.class);
 
-		toTest.handleDroped(new ActionSuccess());
+		toTest.handleSwaped(new ActionSuccess());
 
-		verify(toTest.world).dropButton();
+		verify(toTest.world).swapButton();
 	}
 }

@@ -47,7 +47,7 @@ public class PathFinderTest {
 //		));
 //	}
 
-	@Test
+//	@Test
 	public void testBigRoom(){
 		final Maze maze = createRoom(100, 100);
 		final Coord start = new Coord(1, -98);

@@ -32,11 +32,7 @@ class TestRobot extends AbstractRobot {
 		return returnAction;
 	}
 	@Override
-	protected Action handleGot(ActionSuccess event) {
-		return returnAction;
-	}
-	@Override
-	protected Action handleDroped(ActionSuccess event) {
+	protected Action handleSwaped(ActionSuccess event) {
 		return returnAction;
 	}
 	@Override
@@ -64,11 +60,7 @@ class TestRobot extends AbstractRobot {
 		return returnAction;
 	}
 	@Override
-	protected Action handleGetFailed(ActionFail event) {
-		return returnAction;
-	}
-	@Override
-	protected Action handleDropFailed(ActionFail event) {
+	protected Action handleSwapFailed(ActionFail event) {
 		return returnAction;
 	}
 	@Override

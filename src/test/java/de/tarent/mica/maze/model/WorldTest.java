@@ -33,7 +33,7 @@ public class WorldTest {
 	@Test
 	public void testPutButton(){
 		World world = new World(new Maze(new Field(new Coord(0, 0), Type.PLAYER_NORTH, Type.BUTTON0)));
-		world.putButton();
+		world.swapButton();
 
 		assertTrue(0 == world.getInventarButton());
 		assertNull(world.getMaze().getPlayerField().getButtonType());
@@ -42,26 +42,26 @@ public class WorldTest {
 	@Test
 	public void testPutButton_notOnButton(){
 		World world = new World(new Maze(new Field(new Coord(0, 0), Type.PLAYER_NORTH)));
-		world.putButton();
+		world.swapButton();
 
 		assertNull(world.getInventarButton());
 	}
 
 	@Test
-	public void testDropButton(){
+	public void testSwapButton(){
 		World world = new World(new Maze(new Field(new Coord(0, 0), Type.PLAYER_NORTH)));
 		world.inventarButton = 0;
 
-		world.dropButton();
+		world.swapButton();
 		assertNull(world.getInventarButton());
 		assertEquals(Type.BUTTON0, world.getMaze().getPlayerField().getButtonType());
 	}
 
 	@Test
-	public void testDropButton_noInventory(){
+	public void testSwapButton_noInventory(){
 		World world = new World(new Maze(new Field(new Coord(0, 0), Type.PLAYER_NORTH)));
 
-		world.dropButton();
+		world.swapButton();
 		assertNull(world.getInventarButton());
 		assertNull(world.getMaze().getPlayerField().getButtonType());
 	}

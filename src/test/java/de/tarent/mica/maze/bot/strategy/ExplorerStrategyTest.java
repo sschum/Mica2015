@@ -1,7 +1,9 @@
 package de.tarent.mica.maze.bot.strategy;
 
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,10 +11,7 @@ import org.junit.Test;
 import de.tarent.mica.maze.bot.action.Look;
 import de.tarent.mica.maze.bot.action.TurnLeft;
 import de.tarent.mica.maze.bot.action.TurnRight;
-import de.tarent.mica.maze.bot.strategy.ExplorerStrategy;
 import de.tarent.mica.maze.model.Coord;
-import de.tarent.mica.maze.model.Field;
-import de.tarent.mica.maze.model.Maze;
 import de.tarent.mica.maze.model.Type;
 import de.tarent.mica.maze.model.World;
 import de.tarent.mica.maze.test.MazeBuilder;
@@ -47,7 +46,7 @@ public class ExplorerStrategyTest {
 		for(int i=1; i < 10; i++) world.getMaze().putField(new Coord(i, 0), Type.getButton(i));
 
 		world.getMaze().getPlayerField().setButton(Type.BUTTON0);
-		world.putButton();
+		world.swapButton();
 
 		assertTrue(toTest.isDiscovered(world));
 	}
@@ -107,7 +106,7 @@ public class ExplorerStrategyTest {
 		world.pushButton();
 		world.getMaze().getPlayerField().removePlayer();
 		world.getMaze().getField(new Coord(1, 0)).setPlayer(Type.PLAYER_EAST);
-		world.putButton();
+		world.swapButton();
 
 		assertTrue(toTest.isDiscovered(world));
 	}
@@ -126,7 +125,7 @@ public class ExplorerStrategyTest {
 		for(int i=1; i < 5; i++) world.getMaze().putField(new Coord(i, 0), Type.getButton(i));
 
 		world.getMaze().getPlayerField().setButton(Type.BUTTON0);
-		world.putButton();
+		world.swapButton();
 
 		assertFalse(toTest.isDiscovered(world));
 	}
@@ -151,7 +150,7 @@ public class ExplorerStrategyTest {
 		world.pushButton();
 		world.getMaze().getPlayerField().removePlayer();
 		world.getMaze().getField(new Coord(1, 0)).setPlayer(Type.PLAYER_EAST);
-		world.putButton();
+		world.swapButton();
 
 		assertFalse(toTest.isDiscovered(world));
 	}

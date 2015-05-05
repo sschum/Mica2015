@@ -9,11 +9,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.tarent.mica.maze.bot.action.Action;
-import de.tarent.mica.maze.bot.action.Drop;
-import de.tarent.mica.maze.bot.action.Get;
 import de.tarent.mica.maze.bot.action.Look;
 import de.tarent.mica.maze.bot.action.Push;
 import de.tarent.mica.maze.bot.action.StartGame;
+import de.tarent.mica.maze.bot.action.Swap;
 import de.tarent.mica.maze.bot.action.TurnLeft;
 import de.tarent.mica.maze.bot.action.TurnRight;
 import de.tarent.mica.maze.bot.action.Walk;
@@ -99,24 +98,13 @@ public class AbstractRobotTest {
 	}
 
 	@Test
-	public void testGot(){
-		toTest.history.add(new Get());
+	public void testSwaped(){
+		toTest.history.add(new Swap());
 		final ActionSuccess event = new ActionSuccess();
 
 		toTestSpy.handleEvent(event);
 
-		verify(toTestSpy).handleGot(same(event));
-		assertSame(TestRobot.returnAction, getLastAction());
-	}
-
-	@Test
-	public void testDroped(){
-		toTest.history.add(new Drop());
-		final ActionSuccess event = new ActionSuccess();
-
-		toTestSpy.handleEvent(event);
-
-		verify(toTestSpy).handleDroped(same(event));
+		verify(toTestSpy).handleSwaped(same(event));
 		assertSame(TestRobot.returnAction, getLastAction());
 	}
 
@@ -187,24 +175,13 @@ public class AbstractRobotTest {
 	}
 
 	@Test
-	public void testGetFail(){
-		toTest.history.add(new Get());
+	public void testSwapFail(){
+		toTest.history.add(new Swap());
 		final ActionFail event = new ActionFail();
 
 		toTestSpy.handleEvent(event);
 
-		verify(toTestSpy).handleGetFailed(same(event));
-		assertSame(TestRobot.returnAction, getLastAction());
-	}
-
-	@Test
-	public void testDropFail(){
-		toTest.history.add(new Drop());
-		final ActionFail event = new ActionFail();
-
-		toTestSpy.handleEvent(event);
-
-		verify(toTestSpy).handleDropFailed(same(event));
+		verify(toTestSpy).handleSwapFailed(same(event));
 		assertSame(TestRobot.returnAction, getLastAction());
 	}
 

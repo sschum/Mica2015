@@ -4,11 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.tarent.mica.maze.bot.action.Action;
-import de.tarent.mica.maze.bot.action.Drop;
-import de.tarent.mica.maze.bot.action.Get;
 import de.tarent.mica.maze.bot.action.Look;
 import de.tarent.mica.maze.bot.action.Push;
 import de.tarent.mica.maze.bot.action.StartGame;
+import de.tarent.mica.maze.bot.action.Swap;
 import de.tarent.mica.maze.bot.action.TurnLeft;
 import de.tarent.mica.maze.bot.action.TurnRight;
 import de.tarent.mica.maze.bot.action.Walk;
@@ -59,10 +58,8 @@ public abstract class AbstractRobot implements Robot {
 			nextAction = handleTurnedRight(event);
 		}else if(lastAction instanceof Push){
 			nextAction = handlePushed(event);
-		}else if(lastAction instanceof Get){
-			nextAction = handleGot(event);
-		}else if(lastAction instanceof Drop){
-			nextAction = handleDroped(event);
+		}else if(lastAction instanceof Swap){
+			nextAction = handleSwaped(event);
 		}else if(lastAction instanceof Look){
 			nextAction = handleLooked(event);
 		}else{
@@ -82,9 +79,7 @@ public abstract class AbstractRobot implements Robot {
 
 	protected abstract Action handlePushed(ActionSuccess event);
 
-	protected abstract Action handleGot(ActionSuccess event);
-
-	protected abstract Action handleDroped(ActionSuccess event);
+	protected abstract Action handleSwaped(ActionSuccess event);
 
 	protected abstract Action handleLooked(ActionSuccess event);
 
@@ -102,10 +97,8 @@ public abstract class AbstractRobot implements Robot {
 			nextAction = handleTurnRightFailed(event);
 		}else if(lastAction instanceof Push){
 			nextAction = handlePushFailed(event);
-		}else if(lastAction instanceof Get){
-			nextAction = handleGetFailed(event);
-		}else if(lastAction instanceof Drop){
-			nextAction = handleDropFailed(event);
+		}else if(lastAction instanceof Swap){
+			nextAction = handleSwapFailed(event);
 		}else if(lastAction instanceof Look){
 			nextAction = handleLookFailed(event);
 		}else{
@@ -125,9 +118,7 @@ public abstract class AbstractRobot implements Robot {
 
 	protected abstract Action handlePushFailed(ActionFail event);
 
-	protected abstract Action handleGetFailed(ActionFail event);
-
-	protected abstract Action handleDropFailed(ActionFail event);
+	protected abstract Action handleSwapFailed(ActionFail event);
 
 	protected abstract Action handleLookFailed(ActionFail event);
 

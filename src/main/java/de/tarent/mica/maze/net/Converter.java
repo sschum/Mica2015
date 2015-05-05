@@ -11,11 +11,10 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
 import de.tarent.mica.maze.bot.action.Action;
-import de.tarent.mica.maze.bot.action.Drop;
-import de.tarent.mica.maze.bot.action.Get;
 import de.tarent.mica.maze.bot.action.Look;
 import de.tarent.mica.maze.bot.action.Push;
 import de.tarent.mica.maze.bot.action.StartGame;
+import de.tarent.mica.maze.bot.action.Swap;
 import de.tarent.mica.maze.bot.action.TurnLeft;
 import de.tarent.mica.maze.bot.action.TurnRight;
 import de.tarent.mica.maze.bot.action.Walk;
@@ -54,10 +53,8 @@ public class Converter {
 
 		final String sAction;
 
-		if(action instanceof Drop){
-			sAction = "drop";
-		}else if(action instanceof Get){
-			sAction = "get";
+		if(action instanceof Swap){
+			sAction = "swap";
 		}else if(action instanceof Look){
 			sAction = "look";
 		}else if(action instanceof Push){

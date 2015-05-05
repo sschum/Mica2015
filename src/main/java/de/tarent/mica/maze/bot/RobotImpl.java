@@ -160,22 +160,11 @@ public class RobotImpl extends AbstractRobot {
 	}
 
 	@Override
-	protected Action handleGot(ActionSuccess event) {
-		log.info("Put button.");
+	protected Action handleSwaped(ActionSuccess event) {
+		log.info("Swaped button.");
 		world.increasAction();
 
-		world.putButton();
-
-		logWorld();
-		return getNextAction();
-	}
-
-	@Override
-	protected Action handleDroped(ActionSuccess event) {
-		log.info("Droped button.");
-		world.increasAction();
-
-		world.dropButton();
+		world.swapButton();
 
 		logWorld();
 		return getNextAction();
@@ -307,16 +296,8 @@ public class RobotImpl extends AbstractRobot {
 	}
 
 	@Override
-	protected Action handleGetFailed(ActionFail event) {
-		log.error("Get failed!");
-		world.increasAction();
-
-		return getNextAction();
-	}
-
-	@Override
-	protected Action handleDropFailed(ActionFail event) {
-		log.error("Drop failed!");
+	protected Action handleSwapFailed(ActionFail event) {
+		log.error("Swap failed!");
 		world.increasAction();
 
 		return getNextAction();

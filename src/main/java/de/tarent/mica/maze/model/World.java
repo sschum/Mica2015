@@ -22,21 +22,22 @@ public class World {
 	public Integer getInventarButton() {
 		return inventarButton;
 	}
-	public void putButton() {
+	public void swapButton() {
 		final Field playerField = maze.getPlayerField();
+
+		Integer invButton = inventarButton;
 
 		if(playerField.hasButton()){
 			inventarButton = playerField.getButtonType().getButtonNumber();
 			playerField.removeButton();
 		}
-	}
-	public void dropButton() {
-		if(inventarButton == null) return;
 
-		final Field playerField = maze.getPlayerField();
-		playerField.setButton(Type.getButton(inventarButton));
-
-		this.inventarButton = null;
+		if(invButton != null){
+			playerField.setButton(Type.getButton(invButton));
+			if(inventarButton == invButton){
+				inventarButton = null;
+			}
+		}
 	}
 
 	public Integer getLastPushedButton() {

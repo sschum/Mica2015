@@ -1,16 +1,15 @@
 package de.tarent.mica.maze.net;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
 import org.junit.Test;
 
-import de.tarent.mica.maze.bot.action.Drop;
-import de.tarent.mica.maze.bot.action.Get;
 import de.tarent.mica.maze.bot.action.Look;
 import de.tarent.mica.maze.bot.action.Push;
 import de.tarent.mica.maze.bot.action.StartGame;
+import de.tarent.mica.maze.bot.action.Swap;
 import de.tarent.mica.maze.bot.action.TurnLeft;
 import de.tarent.mica.maze.bot.action.TurnRight;
 import de.tarent.mica.maze.bot.action.Walk;
@@ -46,17 +45,10 @@ public class ConverterActionTest {
 	}
 
 	@Test
-	public void testGet() throws IOException{
-		final String result = Converter.getInstance().convertToMessage(new Get());
-
-		assertEquals("{\"action\":\"get\"}", result);
-	}
-
-	@Test
 	public void testDrop() throws IOException{
-		final String result = Converter.getInstance().convertToMessage(new Drop());
+		final String result = Converter.getInstance().convertToMessage(new Swap());
 
-		assertEquals("{\"action\":\"drop\"}", result);
+		assertEquals("{\"action\":\"swap\"}", result);
 	}
 
 	@Test
