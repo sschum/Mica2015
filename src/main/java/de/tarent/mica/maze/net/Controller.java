@@ -88,6 +88,11 @@ public class Controller {
 
         final Action action = robot.handleEvent(event);
 
+        if(action == null){
+        	log.debug("There are no actions left. I'am out!");
+        	session.disconnect();
+        	return;
+        }
         if(action instanceof StartGame){
         	waitForNewGame = true;
         }
