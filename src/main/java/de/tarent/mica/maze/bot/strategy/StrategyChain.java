@@ -41,4 +41,10 @@ public class StrategyChain implements Strategy {
 	public void addStrategy(Strategy strategy){
 		this.chain.add(strategy);
 	}
+
+	public void removeLast() {
+		if(chain.isEmpty()) return;
+
+		chain.remove(chain.size() - 1);
+	}
 }
