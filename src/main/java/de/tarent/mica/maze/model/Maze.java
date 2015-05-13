@@ -121,12 +121,12 @@ public class Maze implements Cloneable{
 		return result;
 	}
 
-	public boolean hasField(Coord newCoord) {
-		return maze.containsKey(newCoord);
+	public boolean hasField(Coord coord) {
+		return maze.containsKey(coord);
 	}
 
-	public Field getField(Coord newCoord) {
-		return maze.get(newCoord);
+	public Field getField(Coord coord) {
+		return maze.get(coord);
 	}
 
 	public WorldDimension getDimension(){

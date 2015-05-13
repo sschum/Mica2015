@@ -2,10 +2,7 @@ package de.tarent.mica.maze.bot.strategy.navigation;
 
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
@@ -47,11 +44,11 @@ public class PathFinderTest {
 //		));
 //	}
 
-//	@Test
+	@Test
 	public void testBigRoom(){
 		final Maze maze = createRoom(100, 100);
-		final Coord start = new Coord(1, -98);
-		final Coord dest = new Coord(98, -1);
+		final Coord start = new Coord(2, -98);
+		final Coord dest = new Coord(98, -2);
 
 		PathFinder pf = new PathFinder(maze);
 		List<Coord> route = pf.getRoute(start, dest);
