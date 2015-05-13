@@ -37,7 +37,7 @@ public class Edge {
 			final Coord prevCoord = i - 1 < 0 ? route.getStart() : edge.get(i - 1);
 			final Coord nextCoord = i + 1 >= edge.size() ? route.getEnd() : edge.get(i + 1);
 
-			if(isCurve(prevCoord, curCoord, nextCoord)){
+			if(Coord.isCurve(prevCoord, curCoord, nextCoord)){
 				weight++; //curves count twice
 			}
 
@@ -45,22 +45,6 @@ public class Edge {
 		}
 
 		this.edge.addAll(edge);
-	}
-
-	private boolean isCurve(Coord prev, Coord cur, Coord next) {
-		if(prev == null || cur == null || next == null){
-			return false;
-		}
-		if(prev.getX() == cur.getX() && next.getX() == cur.getX()){
-			//vertical align
-			return false;
-		}
-		if(prev.getY() == cur.getY() && next.getY() == cur.getY()){
-			//horizonntal align
-			return false;
-		}
-
-		return true;
 	}
 
 	public List<Coord> getEdge() {

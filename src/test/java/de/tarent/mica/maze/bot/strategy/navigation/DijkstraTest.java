@@ -2,14 +2,15 @@ package de.tarent.mica.maze.bot.strategy.navigation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import de.tarent.mica.maze.model.Coord;
 
@@ -85,6 +86,17 @@ public class DijkstraTest {
 		return nodes;
 	}
 
+	private class DijkstraSpy extends Dijkstra{
+		public DijkstraSpy(Coord start, Map<Route, Edge> nodes){
+			super(start, nodes);
+		}
+
+		@Override
+		protected Integer getWeight(Coord preNode, Coord curNode, Edge neighbor) {
+			return neighbor.getWeight();
+		}
+	}
+
 	/**
 	 * @see <a href="https://www.youtube.com/watch?v=S8y-Sk7u1So">YouTube-Tutorial</a>
 	 */
@@ -92,7 +104,7 @@ public class DijkstraTest {
 	public void buildTable(){
 		Map<Route, Edge> nodes = testGraph();
 
-		Dijkstra dij = new Dijkstra(a, nodes);
+		Dijkstra dij = new DijkstraSpy(a, nodes);
 
 		checkTable(dij, a, a, 0);
 		checkTable(dij, b, c, 3);

@@ -49,7 +49,7 @@ public class Dijkstra {
 			TableEntry curEntry = table.get(curNode);
 			for(Edge neighbor : neighbors){
 				TableEntry neighborEntry = table.get(neighbor.getEnd());
-				int sumDistance = curEntry.distance + getWeight(curNode, neighbor);
+				int sumDistance = curEntry.distance + getWeight(curEntry.prenode, curNode, neighbor);
 				if(neighborEntry.distance == null || sumDistance < neighborEntry.distance){
 					neighborEntry.distance = sumDistance;
 					neighborEntry.prenode = curNode;
@@ -144,7 +144,22 @@ public class Dijkstra {
 		return result;
 	}
 
-	private Integer getWeight(Coord curNode, Edge neighbor) {
+	protected Integer getWeight(Coord preNode, Coord curNode, Edge neighbor) {
+		if(preNode != null && curNode.equals(preNode)){
+			return neighbor.getWeight();
+		}
+
+		Edge edge = nodes.get(new Route(preNode, curNode));
+		List<Coord> e = edge.getEdge();
+
+		Coord a = e.isEmpty() ? edge.getStart() : e.get(e.size() - 1);
+		Coord b = curNode;
+		Coord c = neighbor.getEdge().isEmpty() ? neighbor.getEnd() : neighbor.getEdge().get(0);
+
+		if(Coord.isCurve(a, b, c)){
+			return neighbor.getWeight() + 1;
+		}
+
 		return neighbor.getWeight();
 	}
 

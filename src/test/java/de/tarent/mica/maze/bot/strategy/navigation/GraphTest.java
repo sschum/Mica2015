@@ -352,7 +352,6 @@ public class GraphTest {
 	}
 
 	@Test
-	//TODO: optimierungspotential! Der gelaufene Weg ist nicht das optimum!
 	public void getShortestWay_EdgeToCrossing4(){
 		final Maze maze = MazeBuilder.fromString(
 			"??????#?#???????????\n" +
@@ -381,11 +380,11 @@ public class GraphTest {
 		assertEquals(new Coord(12, -16), way.get(0));
 		assertEquals(new Coord(12, -15), way.get(1));
 		assertEquals(new Coord(12, -14), way.get(2));
-		assertEquals(new Coord(13, -14), way.get(3));
-		assertEquals(new Coord(14, -14), way.get(4));
-		assertEquals(new Coord(14, -13), way.get(5));
-		assertEquals(new Coord(14, -12), way.get(6));
-		assertEquals(new Coord(14, -11), way.get(7));
+		assertEquals(new Coord(12, -13), way.get(3));
+		assertEquals(new Coord(12, -12), way.get(4));
+		assertEquals(new Coord(12, -11), way.get(5));
+		assertEquals(new Coord(12, -10), way.get(6));
+		assertEquals(new Coord(13, -10), way.get(7));
 		assertEquals(new Coord(14, -10), way.get(8));
 		assertEquals(new Coord(15, -10), way.get(9));
 	}
@@ -548,5 +547,22 @@ public class GraphTest {
 		assertEquals(new Coord(1, -10), way.get(3));
 		assertEquals(new Coord(1, -11), way.get(4));
 		assertEquals(new Coord(1, -12), way.get(5));
+	}
+
+	@Test
+	public void getShortestWay_curvesWeightMore(){
+		final Maze maze = MazeBuilder.fromString(
+			"#######\n" +
+			"#    0#\n" +
+			"# # # #\n" +
+			"#     #\n" +
+			"# # # #\n" +
+			"#^    #\n" +
+			"#######");
+
+		Graph graph = new Graph(maze);
+		List<Coord> way = graph.getShortestWay(maze.getPlayerField().getCoord(), maze.getButtonField(Type.BUTTON0).getCoord());
+
+		assertFalse(way.contains(new Coord(3, -3)));
 	}
 }

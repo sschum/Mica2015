@@ -86,6 +86,22 @@ public class Coord implements Comparable<Coord>, Cloneable {
 		return null;
 	}
 
+	public static boolean isCurve(Coord prev, Coord mid, Coord next) {
+		if(prev == null || mid == null || next == null){
+			return false;
+		}
+		if(prev.getX() == mid.getX() && next.getX() == mid.getX()){
+			//vertical align
+			return false;
+		}
+		if(prev.getY() == mid.getY() && next.getY() == mid.getY()){
+			//horizonntal align
+			return false;
+		}
+
+		return true;
+	}
+
 	@Override
 	public Coord clone() {
 		return new Coord(x, y);
