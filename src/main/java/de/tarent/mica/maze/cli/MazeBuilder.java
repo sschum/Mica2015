@@ -8,6 +8,7 @@ import de.raysha.lib.jsimpleshell.io.OutputBuilder;
 import de.tarent.mica.maze.generator.ButtonPositioner;
 import de.tarent.mica.maze.generator.MazeGenerator;
 import de.tarent.mica.maze.generator.MazePerforater;
+import de.tarent.mica.maze.generator.MazeScaler;
 import de.tarent.mica.maze.generator.PerfectMazeGenerator;
 import de.tarent.mica.maze.util.Random;
 
@@ -58,6 +59,16 @@ public class MazeBuilder {
 		}
 
 		generator = new MazePerforater(generator, percent);
+	}
+
+	@Command
+	public void setScaler(){
+		if(generator == null){
+			out.err().normal("You have to configure a generator at the first.").println();
+			return;
+		}
+
+		generator = new MazeScaler(generator);
 	}
 
 	public MazeGenerator getGenerator(){
