@@ -122,6 +122,20 @@ public class Maze implements Cloneable{
 		return result;
 	}
 
+	public List<Field> getWallFields(){
+		List<Field> result = new ArrayList<Field>();
+
+		for(Field f : maze.values()){
+			for(Type t : f.getTypes()){
+				if(t == Type.WALL){
+					result.add(f);
+				}
+			}
+		}
+
+		return result;
+	}
+
 	public boolean hasField(Coord coord) {
 		return maze.containsKey(coord);
 	}

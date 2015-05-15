@@ -7,6 +7,7 @@ import de.raysha.lib.jsimpleshell.exception.ExitException;
 import de.raysha.lib.jsimpleshell.io.OutputBuilder;
 import de.tarent.mica.maze.generator.ButtonPositioner;
 import de.tarent.mica.maze.generator.MazeGenerator;
+import de.tarent.mica.maze.generator.MazePerforater;
 import de.tarent.mica.maze.generator.PerfectMazeGenerator;
 import de.tarent.mica.maze.util.Random;
 
@@ -20,6 +21,7 @@ public class MazeBuilder {
 	@Command(name="default", abbrev="d")
 	public void defaultGenerator() throws ExitException{
 		generator = new PerfectMazeGenerator(25, 25);
+		generator = new MazePerforater(generator, 25);
 
 		throw new ExitException();
 	}
@@ -42,7 +44,20 @@ public class MazeBuilder {
 		final int width = r.nextInt() % 100;
 
 		setDimension(height, width);
-		out.out().normal("Coosen dimension: " + height + "x" + width);
+		out.out().normal("Coosen dimension: " + height + "x" + width).println();
+	}
+
+	@Command
+	public void setPerforator(
+			@Param("percent")
+			int percent){
+
+		if(generator == null){
+			out.err().normal("You have to configure a generator at the first.").println();
+			return;
+		}
+
+		generator = new MazePerforater(generator, percent);
 	}
 
 	public MazeGenerator getGenerator(){
