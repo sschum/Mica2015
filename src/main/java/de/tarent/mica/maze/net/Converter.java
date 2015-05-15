@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +24,10 @@ import de.tarent.mica.maze.bot.event.ActionSuccess;
 import de.tarent.mica.maze.bot.event.ButtonActionSuccess;
 import de.tarent.mica.maze.bot.event.Event;
 import de.tarent.mica.maze.bot.event.LookActionSuccess;
-import de.tarent.mica.maze.bot.event.LookActionSuccess.Field;
+import de.tarent.mica.maze.model.Coord;
+import de.tarent.mica.maze.model.Field;
+import de.tarent.mica.maze.model.Maze;
+import de.tarent.mica.maze.model.Type;
 
 public class Converter {
 	private static String MESSAGE_KEY_ACTION = "action";
@@ -70,7 +74,7 @@ public class Converter {
 
 			if(action instanceof StartGame){
 				raw.put(MESSAGE_KEY_NAME, ((StartGame)action).getPlayerName());
-				raw.put(MESSAGE_KEY_MAZE, "");
+				raw.put(MESSAGE_KEY_MAZE, generateMazeRepresentation(((StartGame)action).getMaze()));
 			}
 		}
 
@@ -80,6 +84,34 @@ public class Converter {
 
 		final String message = mapper.writeValueAsString(raw);
 		return message;
+	}
+
+	private String generateMazeRepresentation(Maze maze) {
+		if(maze == null) return "";
+
+		StringBuilder sb = new StringBuilder();
+		SortedMap<Coord, Field> toPrint = maze.getSortedFields();
+
+		Integer y = null;
+
+		for(Field f : toPrint.values()){
+			String sign = " ";
+
+			if(f.hasButton()){
+				sign = "*";
+			}else if(f.isWall()){
+				sign = "#";
+			}
+
+			if(y != null && y != f.getCoord().getY()){
+				sb.append("\n");
+			}
+			y = f.getCoord().getY();
+
+			sb.append(sign);
+		}
+
+		return sb.toString();
 	}
 
 	public Event convertToEvent(String message) throws IOException {
@@ -123,7 +155,7 @@ public class Converter {
 	private static final int MAX_LOOK_RANGE = 5;
 	private LookActionSuccess buildLookActionSuccess(final Map<String, String> raw) {
 		LookActionSuccess result = new LookActionSuccess();
-		result.setFields(new ArrayList<Field>());
+		result.setFields(new ArrayList<LookActionSuccess.Field>());
 
 		for(int i=1; i <= MAX_LOOK_RANGE; i++){
 			if(raw.containsKey(String.valueOf(i))){
@@ -131,16 +163,16 @@ public class Converter {
 				Matcher buttonNumberMatcher = lookButtonNumberPattern.matcher(fieldRaw);
 
 				boolean isWall = fieldRaw.contains("#");
-				Field field;
+				LookActionSuccess.Field field;
 
 				if(isWall){
-					field = new Field();
+					field = new LookActionSuccess.Field();
 				}else{
 					boolean right = fieldRaw.contains("l");
 					boolean left = fieldRaw.contains("r");
 					Integer button = buttonNumberMatcher.matches() ? Integer.parseInt(buttonNumberMatcher.group(1)) : null;
 
-					field = new Field(
+					field = new LookActionSuccess.Field(
 							right,
 							left,
 							button);

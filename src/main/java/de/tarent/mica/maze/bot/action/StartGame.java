@@ -1,8 +1,10 @@
 package de.tarent.mica.maze.bot.action;
 
-public class StartGame extends Action {
+import de.tarent.mica.maze.model.Maze;
 
+public class StartGame extends Action {
 	private String playerName;
+	private Maze maze;
 
 	public StartGame(String playerName) {
 		super();
@@ -15,5 +17,13 @@ public class StartGame extends Action {
 
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
+	}
+
+	public void setMaze(Maze maze) {
+		this.maze = maze;
+	}
+
+	public Maze getMaze() {
+		return maze;
 	}
 }

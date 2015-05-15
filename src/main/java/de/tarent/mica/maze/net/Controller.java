@@ -17,6 +17,7 @@ import de.tarent.mica.maze.bot.Robot;
 import de.tarent.mica.maze.bot.action.Action;
 import de.tarent.mica.maze.bot.action.StartGame;
 import de.tarent.mica.maze.bot.event.Event;
+import de.tarent.mica.maze.generator.MazeGenerator;
 import de.tarent.mica.maze.util.LogFormat;
 
 @WebSocket
@@ -26,12 +27,14 @@ public class Controller {
 	private final String host;
 	private final int port;
 	private final Robot robot;
+	private final MazeGenerator mazeGenerator;
 	private boolean waitForNewGame = false;
 
 	private CountDownLatch latch;
 
-	public Controller(Robot robot, String host, int port) throws IOException {
+	public Controller(Robot robot, MazeGenerator mazeGenerator, String host, int port) throws IOException {
 		this.robot = robot;
+		this.mazeGenerator = mazeGenerator;
 		this.host = host;
 		this.port = port;
 	}
@@ -94,6 +97,9 @@ public class Controller {
         	return;
         }
         if(action instanceof StartGame){
+        	((StartGame)action).setMaze(mazeGenerator.generateMaze());
+        	log.info("Generate and use maze:\n" + ((StartGame)action).getMaze());
+
         	waitForNewGame = true;
         }
 

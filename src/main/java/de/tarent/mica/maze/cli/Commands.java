@@ -7,6 +7,9 @@ import de.raysha.lib.jsimpleshell.annotation.Param;
 import de.raysha.lib.jsimpleshell.builder.ShellBuilder;
 import de.tarent.mica.maze.bot.Robot;
 import de.tarent.mica.maze.bot.RobotImpl;
+import de.tarent.mica.maze.generator.ButtonPositioner;
+import de.tarent.mica.maze.generator.MazeGenerator;
+import de.tarent.mica.maze.generator.PerfectMazeGenerator;
 import de.tarent.mica.maze.net.Controller;
 
 public class Commands {
@@ -46,6 +49,15 @@ public class Commands {
 		subShell.commandLoop();
 
 		final Robot robot = new RobotImpl(name, builder.getStrategy());
-		new Controller(robot, host, port).start();
+
+		final MazeBuilder mazeBuilder = new MazeBuilder();
+		subShell = ShellBuilder.subshell("maze", parent)
+				.behavior().addHandler(mazeBuilder)
+			.build();
+
+		subShell.commandLoop();
+		final MazeGenerator generator = mazeBuilder.getGenerator();
+
+		new Controller(robot, generator, host, port).start();
 	}
 }

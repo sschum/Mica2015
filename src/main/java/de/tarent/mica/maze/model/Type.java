@@ -1,5 +1,12 @@
 package de.tarent.mica.maze.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 public enum Type {
 	PLAYER_NORTH('^', true, false),
 	PLAYER_EAST('>', true, false),
@@ -67,6 +74,19 @@ public enum Type {
 		}
 
 		return null;
+	}
+
+	public static Iterable<Type> getButtons(){
+		List<Type> buttons = new ArrayList<Type>(Arrays.asList(values()));
+		Iterator<Type> iter = buttons.iterator();
+
+		while(iter.hasNext()){
+			if(!iter.next().isButton){
+				iter.remove();
+			}
+		}
+
+		return buttons;
 	}
 
 	@Override

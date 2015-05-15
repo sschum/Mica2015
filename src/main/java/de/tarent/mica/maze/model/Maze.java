@@ -4,6 +4,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
@@ -203,6 +204,10 @@ public class Maze implements Cloneable{
 		 *  # #   # #
 		 */
 		return neighbors >= 3;
+	}
+
+	public SortedMap<Coord, Field> getSortedFields(){
+		return Collections.unmodifiableSortedMap(maze);
 	}
 
 	@Override

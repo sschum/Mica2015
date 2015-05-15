@@ -46,4 +46,9 @@ public class WorldDimension {
 	public void setHeight(int height) {
 		this.height = height;
 	}
+
+	@Override
+	public String toString() {
+		return height + "x" + width + " (" + minX + ";" + minY + " | " + maxX + ";" + maxY + ")";
+	}
 }
