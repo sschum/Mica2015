@@ -54,10 +54,7 @@ public class PathFinder {
 		}
 
 		try {
-			long time = System.currentTimeMillis();
 			tp.invokeAll(todos);
-
-			System.out.println((System.currentTimeMillis() - time) + "ms   " + routes.size());
 		} catch (InterruptedException e) {}
 
 		return routes;
