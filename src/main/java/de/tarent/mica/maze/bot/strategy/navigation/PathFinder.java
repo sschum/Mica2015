@@ -1,9 +1,14 @@
 package de.tarent.mica.maze.bot.strategy.navigation;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -29,6 +34,42 @@ public class PathFinder {
 
 	public PathFinder(Maze maze) {
 		this.maze = maze;
+	}
+
+	public List<List<Coord>> getRoutes(final Coord start, final List<Coord> dest){
+		final List<List<Coord>> routes = Collections.synchronizedList(new ArrayList<List<Coord>>(dest.size()));
+
+		final ExecutorService tp = getThreadPool();
+		List<Callable<Object>> todos = new LinkedList<>();
+
+		for(Coord c : dest){
+			final Coord coord = c;
+			todos.add(Executors.callable(new Runnable() {
+				@Override
+				public void run() {
+					List<Coord> path = getRoute(start, coord);
+					routes.add(path);
+				}
+			}));
+		}
+
+		try {
+			long time = System.currentTimeMillis();
+			tp.invokeAll(todos);
+
+			System.out.println((System.currentTimeMillis() - time) + "ms   " + routes.size());
+		} catch (InterruptedException e) {}
+
+		return routes;
+	}
+
+	private ExecutorService threadPool;
+	private ExecutorService getThreadPool() {
+		if(threadPool == null){
+			threadPool = Executors.newCachedThreadPool();
+		}
+
+		return threadPool;
 	}
 
 	public List<Coord> getRoute(final Coord start, final Coord dest){

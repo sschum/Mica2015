@@ -46,10 +46,9 @@ public abstract class AbstractStrategy implements Strategy {
 			}
 
 			PathFinder pf = new PathFinder(world.getMaze());
+			List<List<Coord>> routes = pf.getRoutes(playerCoord, points);
 			List<Coord> shortest = null;
-			for(Coord c : points){
-				List<Coord> path = pf.getRoute(playerCoord, c);
-
+			for(List<Coord> path : routes){
 				if(shortest == null || shortest.isEmpty() || shortest.size() > path.size()){
 					shortest = path;
 				}
