@@ -86,7 +86,7 @@ public class PathFinder {
 		return graph.getShortestWay(start, dest);
 	}
 
-	private Graph getGraph() {
+	private synchronized Graph getGraph() {
 		final String mazeHash = getMazeHash(maze);
 
 		if(preCalculatedGraph.containsKey(mazeHash)){

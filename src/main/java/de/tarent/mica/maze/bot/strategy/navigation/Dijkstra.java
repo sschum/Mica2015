@@ -1,17 +1,7 @@
 package de.tarent.mica.maze.bot.strategy.navigation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import de.tarent.mica.maze.model.Coord;
 
@@ -23,12 +13,18 @@ public class Dijkstra {
 	}
 
 	private final Coord start;
+	private final Coord end;
 	private final Map<Route, Edge> nodes;
 	Map<Coord, TableEntry> table = new HashMap<Coord, TableEntry>();
 
 	public Dijkstra(Coord start, Map<Route, Edge> nodes){
+		this(start, nodes, null);
+	}
+
+	public Dijkstra(Coord start, Map<Route, Edge> nodes, Coord end){
 		this.start = start;
 		this.nodes = nodes;
+		this.end = end;
 
 		buildRouteTable();
 	}
@@ -44,6 +40,10 @@ public class Dijkstra {
 		while(!allVisited()){
 			curNode = getShortestUnvisitedNode(curNode);
 			markAsVisited(curNode);
+
+			if(end != null && end.equals(curNode)){
+				break;
+			}
 
 			Set<Edge> neighbors = getUnvisitedNeighbors(curNode);
 			TableEntry curEntry = table.get(curNode);
@@ -73,31 +73,8 @@ public class Dijkstra {
 		return true;
 	}
 
-	private Set<Coord> getUnvisitedNodeEntries() {
-		Set<Coord> neighbors = new HashSet<Coord>();
-
-		for(Entry<Route, Edge> entry : nodes.entrySet()){
-			neighbors.add(entry.getKey().getEnd());
-		}
-
-		//remove visited nodes
-		Iterator<Coord> iter = neighbors.iterator();
-		while(iter.hasNext()){
-			final Coord curNode = iter.next();
-			if(table.get(curNode).visited){
-				iter.remove();
-			}
-		}
-
-		return neighbors;
-	}
-
 	private Coord getShortestUnvisitedNode(final Coord node) {
-		final Set<Coord> tmp = getUnvisitedNodeEntries();
-		List<Coord> neighbors = new ArrayList<Coord>(tmp);
-
-		//order by edge weight
-		Collections.sort(neighbors, new Comparator<Coord>() {
+		final Comparator<Coord> comparator = new Comparator<Coord>() {
 			@Override
 			public int compare(Coord o1, Coord o2) {
 				return Integer.compare(getDistance(o1), getDistance(o2));
@@ -107,20 +84,32 @@ public class Dijkstra {
 				TableEntry te = table.get(c);
 				if(te.distance != null) return te.distance;
 
-				for(Entry<Route, Edge> entry : nodes.entrySet()){
-					final Route r = entry.getKey();
-					if(r.getStart().equals(node) && r.getEnd().equals(c)){
-						return entry.getValue().getWeight();
-					}
+				final Route r = new Route(node, c);
+				if(nodes.containsKey(r)){
+					return nodes.get(r).getWeight();
 				}
 
 				return Integer.MAX_VALUE;
 			}
-		});
+		};
 
-		if(neighbors.isEmpty()) return null;
+		Coord shortest = null;
 
-		return neighbors.get(0);
+		for(Entry<Route, Edge> entry : nodes.entrySet()){
+			final Coord c = entry.getKey().getEnd();
+			if(!table.get(c).visited){
+				if(shortest == null){
+					shortest = c;
+				}else{
+					final int comp = comparator.compare(shortest, c);
+					if(comp > 0){
+						shortest = c;
+					}
+				}
+			}
+		}
+
+		return shortest;
 	}
 
 	private Set<Edge> getUnvisitedNeighbors(Coord node) {
@@ -168,6 +157,10 @@ public class Dijkstra {
 	}
 
 	public List<Coord> getShortestWay(Coord destination){
+		if(this.end != null && !this.end.equals(destination)){
+			throw new IllegalStateException("The distance table is not complete!");
+		}
+
 		if(!table.containsKey(destination)) return null;
 		if(start.equals(destination)) return new ArrayList<>(Arrays.asList(destination));
 

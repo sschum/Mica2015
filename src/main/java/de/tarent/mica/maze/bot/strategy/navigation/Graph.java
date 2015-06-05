@@ -225,7 +225,7 @@ public class Graph {
 		}
 
 		if(isNode(start)){
-			Dijkstra d = new Dijkstra(start, nodes);
+			Dijkstra d = buildDijkstra(start);
 
 			//easiest condition.. (crossing to crossing)
 			if(isNode(destination)){
@@ -259,6 +259,16 @@ public class Graph {
 		}
 
 		return finalWay;
+	}
+
+	private Map<Coord, Dijkstra> preCalculatedDijkstra = new HashMap<>();
+
+	private synchronized Dijkstra buildDijkstra(Coord start) {
+		if(!preCalculatedDijkstra.containsKey(start)){
+			preCalculatedDijkstra.put(start, new Dijkstra(start, nodes));
+		}
+
+		return preCalculatedDijkstra.get(start);
 	}
 
 	private List<Coord> getShortestWayEdgeToEdge(final Coord start, final Coord destination) {
@@ -392,8 +402,6 @@ public class Graph {
 	}
 
 	private List<Coord> getShortestWayEdgeToCrossing(final Coord start, final Coord destination) {
-		Dijkstra d = new Dijkstra(destination, nodes);
-
 		List<Edge> startEdges = getEdges(start);
 		List<Coord> wayToCrossing = null;
 		Coord startCrossing = null;
@@ -405,6 +413,8 @@ public class Graph {
 				startCrossing = edge.getEnd();
 			}
 		}
+
+		Dijkstra d = new Dijkstra(destination, nodes, startCrossing);
 
 		List<Coord> completeWay = new ArrayList<>();
 		List<Coord> c2c = d.getShortestWay(startCrossing);
