@@ -1,6 +1,9 @@
 package de.tarent.mica.maze.bot;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.*;
 
 import org.apache.log4j.Logger;
 
@@ -312,9 +315,14 @@ public class RobotImpl extends AbstractRobot {
 	}
 
 	private void logWorld(){
-		log.debug("\n" + world.toString()
+		final String worldString =  world.toString()
 				.replace("#", new String(new byte[]{-79}, Charset.forName("CP850")))
-				.replace("?", new String(new byte[]{-73}, Charset.forName("CP1252"))));
+				.replace("?", new String(new byte[]{-73}, Charset.forName("CP1252")));
+
+		log.debug("\n" + worldString);
+		try {
+			Files.write(Paths.get(System.getProperty("java.io.tmpdir") + "/RayMaze.state"), worldString.getBytes());
+		} catch (IOException e) {}
 	}
 
 	private Action getNextAction() {
