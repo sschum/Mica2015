@@ -42,6 +42,11 @@ public abstract class AbstractRobot implements Robot {
 		return history.get(history.size() - 1);
 	}
 
+	@Override
+	public void reset() {
+		history = new LinkedList<>();
+	}
+
 	protected abstract Action handleStartEvent();
 
 	private Action handleActionSuccess(ActionSuccess event) {

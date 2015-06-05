@@ -7,4 +7,5 @@ public interface Robot {
 
 	public Action handleEvent(Event event);
 
+	public void reset();
 }

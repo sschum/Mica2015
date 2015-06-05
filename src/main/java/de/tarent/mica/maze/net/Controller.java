@@ -93,7 +93,8 @@ public class Controller {
 
         if(action == null){
         	log.debug("There are no actions left. I'am out!");
-        	session.disconnect();
+			waitForNewGame = true;
+			robot.reset();
         	return;
         }
         if(action instanceof StartGame){
