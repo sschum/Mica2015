@@ -25,6 +25,10 @@ public class PerfectMazeGenerator implements MazeGenerator {
 	private final Maze emptyGrid;
 
 	public PerfectMazeGenerator(int height, int width){
+		//actuell this generator will only work correct with odd dimensions
+		if(height % 2 == 0) height -= 1;
+		if(width % 2 == 0) width -=1;
+
 		this.emptyGrid = generateFrame(height, width);
 	}
 

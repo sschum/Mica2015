@@ -39,6 +39,18 @@ public class MazePerforater implements MazeGenerator {
 			breakable.remove(field);
 		}
 
+		//fix unpassable holes
+		for(Field way : maze.clone().getWayFields()){
+			Coord wayCoord = way.getCoord();
+			if(	maze.getField(wayCoord.north()).isWall() &&
+				maze.getField(wayCoord.east()).isWall() &&
+				maze.getField(wayCoord.south()).isWall() &&
+				maze.getField(wayCoord.west()).isWall()){
+
+				maze.putField(wayCoord, Type.WALL);
+			}
+		}
+
 		return maze;
 	}
 
