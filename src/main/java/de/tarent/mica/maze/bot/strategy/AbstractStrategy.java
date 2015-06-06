@@ -63,6 +63,10 @@ public abstract class AbstractStrategy implements Strategy {
 			List<List<Coord>> routes = pf.getRoutes(playerCoord, points);
 			List<Coord> shortest = null;
 			for(List<Coord> path : routes){
+				if(path == null || path.isEmpty()){
+					continue;
+				}
+
 				if(shortest == null || shortest.isEmpty() || shortest.size() > path.size()){
 					shortest = path;
 				}

@@ -2,11 +2,16 @@ package de.tarent.mica.maze.bot.strategy.navigation;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
 import java.util.List;
 
+import de.tarent.mica.maze.generator.MazePerforater;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 
+import de.tarent.mica.maze.generator.ButtonPositioner;
+import de.tarent.mica.maze.generator.MazeGenerator;
+import de.tarent.mica.maze.generator.PerfectMazeGenerator;
 import de.tarent.mica.maze.model.Coord;
 import de.tarent.mica.maze.model.Maze;
 import de.tarent.mica.maze.model.Type;
@@ -71,5 +76,23 @@ public class PathFinderTest {
 			assertNotNull(route);
 			assertFalse(route.isEmpty());
 		}
+	}
+
+	@Test
+	public void speedTest(){
+		MazeGenerator gen = new ButtonPositioner(
+				new MazePerforater(
+						new PerfectMazeGenerator(100, 100), 5));
+
+		Maze maze = gen.generateMaze();
+
+		PathFinder pf = new PathFinder(maze);
+		pf.getRoutes(maze.getButtonField(Type.BUTTON0).getCoord(),
+			Arrays.asList(
+					maze.getButtonField(Type.BUTTON6).getCoord(),
+					maze.getButtonField(Type.BUTTON7).getCoord(),
+					maze.getButtonField(Type.BUTTON8).getCoord(),
+					maze.getButtonField(Type.BUTTON9).getCoord()
+			));
 	}
 }

@@ -70,9 +70,11 @@ public class PathFinder {
 	}
 
 	public List<Coord> getRoute(final Coord start, final Coord dest){
-		if(isPoorRoom(start, dest)){
+		final Graph graph = getGraph();
+
+		if(isPoorRoom(graph)){
 			log.debug("It's a poor room. Use the recursive finder.");
-			RecursiveFinder recursiveFinder = new RecursiveFinder(maze, start, dest, TimeUnit.SECONDS, 1);
+			RecursiveFinder recursiveFinder = new RecursiveFinder(maze, start, dest, TimeUnit.MILLISECONDS, 500);
 			List<List<Coord>> routes = recursiveFinder.getRoutes();
 
 			if(routes != null && !routes.isEmpty()){
@@ -82,7 +84,6 @@ public class PathFinder {
 			return Collections.EMPTY_LIST;
 		}
 
-		Graph graph = getGraph();
 		return graph.getShortestWay(start, dest);
 	}
 
@@ -101,38 +102,17 @@ public class PathFinder {
 		return graph;
 	}
 
-	private boolean isPoorRoom(final Coord start, final Coord dest) {
-		final WorldDimension dim = maze.getDimension();
-		final int minX = dim.getMinX();
-		final int maxX = dim.getMaxX();
-		final int minY = dim.getMinY();
-		final int maxY = dim.getMaxY();
-
-		Map<Type, Integer> typeCounter = new HashMap<>();
-		for(Type t : Type.values()){
-			typeCounter.put(t, 0);
-		}
-
-		for(int x=minX; x <= maxX; x++){
-			for(int y=minY; y <= maxY; y++){
-				final Coord coord = new Coord(x, y);
-				final Field field = maze.getField(coord);
-
-				if(field != null){
-					for(Type t : field.getTypes()){
-						typeCounter.put(t, typeCounter.get(t) + 1);
-					}
-				}else{
-					typeCounter.put(Type.UNKNOWN, typeCounter.get(Type.UNKNOWN) + 1);
-				}
+	private boolean isPoorRoom(Graph graph) {
+		int zeroWeightEdges = 0;
+		for(Edge edge : graph.nodes.values()){
+			if(edge.getWeight() == 1){
+				zeroWeightEdges++;
 			}
 		}
 
-		final int total = dim.getHeight() * dim.getWidth();
-		final int impassable = typeCounter.get(Type.UNKNOWN) + typeCounter.get(Type.WALL);
-		final double impassableInPercent = (impassable * 100) / total;
+		int zeroWeightInPercent = (100 * zeroWeightEdges) / graph.nodes.size();
 
-		return impassableInPercent <= 25;
+		return zeroWeightInPercent >= 75;
 	}
 
 	private static String getMazeHash(Maze maze){
