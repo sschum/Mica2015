@@ -41,6 +41,11 @@ public abstract class AbstractStrategy implements Strategy {
 		return walker.getNextAction(world);
 	}
 
+	@Override
+	public void reset() {
+		pathWalker.reset();
+	}
+
 	protected final PathWalkerStrategy getPathWalker(World world) {
 		if(this.pathWalker.isArrived(world)){
 			final Coord playerCoord = world.getMaze().getPlayerField().getCoord();

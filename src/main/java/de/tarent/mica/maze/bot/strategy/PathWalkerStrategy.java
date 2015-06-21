@@ -46,6 +46,13 @@ public class PathWalkerStrategy implements Strategy {
 		return continueMission(world);
 	}
 
+	@Override
+	public void reset() {
+		curPath = null;
+		dest = null;
+		curDest = null;
+	}
+
 	private Action continueMission(World world) {
 		final Coord dest = getCurrentDestination(world);
 		final Field playerField = world.getMaze().getPlayerField();

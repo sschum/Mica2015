@@ -17,4 +17,6 @@ public interface Strategy {
 	 * @return The {@link Action} for the game. Or <b>null</b> if this {@link Strategy} has no action.
 	 */
 	public Action getNextAction(World world);
+
+	public void reset();
 }

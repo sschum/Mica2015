@@ -38,6 +38,13 @@ public class StrategyChain implements Strategy {
 		return null;
 	}
 
+	@Override
+	public void reset() {
+		for(Strategy strategy : chain){
+			strategy.reset();
+		}
+	}
+
 	public void addStrategy(Strategy strategy){
 		this.chain.add(strategy);
 	}

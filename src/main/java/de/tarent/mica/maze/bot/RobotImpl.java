@@ -39,6 +39,13 @@ public class RobotImpl extends AbstractRobot {
 	}
 
 	@Override
+	public void reset() {
+		super.reset();
+
+		strategy.reset();
+	}
+
+	@Override
 	protected Action handleStartEvent() {
 		world = new World();
 
