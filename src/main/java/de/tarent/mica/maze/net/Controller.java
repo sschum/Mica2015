@@ -78,9 +78,11 @@ public class Controller {
     	log.debug(LogFormat.format("Receive message: g{0}", msg));
 
     	if(waitForNewGame){
-    		if(msg.contains("new game")){
-    			waitForNewGame = false;
-    			msg = "{\"result\" : \"ok\"}";
+    		if(msg.contains("new game")) {
+				waitForNewGame = false;
+				msg = "{\"result\" : \"ok\"}";
+			}else if(msg.contains("Missing action")){
+				waitForNewGame = false;
     		}else{
     			return;
     		}
