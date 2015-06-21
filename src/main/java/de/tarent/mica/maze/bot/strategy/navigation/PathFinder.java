@@ -74,7 +74,7 @@ public class PathFinder {
 
 		if(isPoorRoom(graph)){
 			log.debug("It's a poor room. Use the recursive finder.");
-			RecursiveFinder recursiveFinder = new RecursiveFinder(maze, start, dest, TimeUnit.MILLISECONDS, 500);
+			RecursiveFinder recursiveFinder = new RecursiveFinder(maze, start, dest, TimeUnit.MILLISECONDS, 100);
 			List<List<Coord>> routes = recursiveFinder.getRoutes();
 
 			if(routes != null && !routes.isEmpty()){
