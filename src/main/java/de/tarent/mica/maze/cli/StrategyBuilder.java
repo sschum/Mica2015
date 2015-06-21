@@ -15,8 +15,8 @@ public class StrategyBuilder {
 
 	@Command(name="default", abbrev="d")
 	public void defaultStrategy() throws ExitException{
-		chain.addStrategy(new SwapStrategy(walker));
 		chain.addStrategy(new PushStrategy(walker));
+		chain.addStrategy(new SwapStrategy(walker));
 		chain.addStrategy(new ExplorerStrategy(walker));
 
 		throw new ExitException();
