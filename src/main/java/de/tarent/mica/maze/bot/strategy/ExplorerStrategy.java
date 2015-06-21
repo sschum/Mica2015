@@ -5,16 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
+import de.tarent.mica.maze.model.*;
 import org.apache.log4j.Logger;
 
 import de.tarent.mica.maze.bot.action.Action;
 import de.tarent.mica.maze.bot.action.Look;
 import de.tarent.mica.maze.bot.action.TurnLeft;
 import de.tarent.mica.maze.bot.action.TurnRight;
-import de.tarent.mica.maze.model.Coord;
-import de.tarent.mica.maze.model.Field;
-import de.tarent.mica.maze.model.Maze;
-import de.tarent.mica.maze.model.World;
 
 /**
  * This strategy tries to explore the maze until all buttons are
@@ -154,6 +151,30 @@ public class ExplorerStrategy extends AbstractStrategy{
 			}
 		}
 
+		if(pointsOfInterest.isEmpty() && !isDiscovered(world)){
+			//special case (the players start field has maybe a button)
+			int missingButton = getMissingButton(world);
+			log.warn("No Points of interests available. Set missing button(" + missingButton + ") on players start field!");
+
+			world.getMaze().putField(new Coord(0, 0), Type.getButton(missingButton));
+			pointsOfInterest.add(new Coord(0, 0));
+		}
+
 		return pointsOfInterest;
+	}
+
+	private int getMissingButton(World world) {
+		for(Type btn : Type.getButtons()){
+			if(world.getInventarButton() != null && btn.getButtonNumber().equals(world.getInventarButton())){
+				continue;
+			}
+
+			Field f = world.getMaze().getButtonField(btn);
+			if(f == null){
+				return btn.getButtonNumber();
+			}
+
+		}
+		return -1;
 	}
 }
