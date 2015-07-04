@@ -21,7 +21,7 @@ public class MazeBuilder {
 
 	@Command(name="default", abbrev="d")
 	public void defaultGenerator() throws ExitException{
-		generator = new PerfectMazeGenerator(25, 25);
+		generator = new PerfectMazeGenerator(50, 50);
 		generator = new MazePerforater(generator, 25);
 
 		throw new ExitException();

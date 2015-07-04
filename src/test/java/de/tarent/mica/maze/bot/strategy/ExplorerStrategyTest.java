@@ -1,5 +1,6 @@
 package de.tarent.mica.maze.bot.strategy;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
@@ -307,5 +308,56 @@ public class ExplorerStrategyTest {
 		World world = new World(MazeBuilder.fromString("###\n##<\n###"));
 
 		assertTrue(toTest.turnToDarkOrLookInto(world) instanceof TurnRight);
+	}
+
+	@Test
+	public void dontMoveToFar(){
+		World world = new World(MazeBuilder.fromString(
+				"###\n" +
+				"#?#\n" +
+				"#?#\n" +
+				"# #\n" +
+				"# #\n" +
+				"# #\n" +
+				"# #\n" +
+				"#^#\n" +
+		        "###"));
+
+		assertEquals(new Coord(1, -5), toTest.getPointsOfInterest(world).get(0));
+
+		world = new World(MazeBuilder.fromString(
+				"###\n" +
+				"#?#\n" +
+				"#?#\n" +
+				"# #\n" +
+				"# #\n" +
+				"# #\n" +
+				"#^#\n" +
+				"###"));
+
+		assertTrue(toTest.getNextAction(world) instanceof Look);
+
+		world = new World(MazeBuilder.fromString(
+				"#?#\n" +
+				"#?#\n" +
+				"# #\n" +
+				"# #\n" +
+				"# #\n" +
+				"# #\n" +
+				"#^#\n" +
+				"###"));
+
+		assertEquals(new Coord(1, -2), toTest.getPointsOfInterest(world).get(0));
+
+		world = new World(MazeBuilder.fromString(
+				"#?#\n" +
+				"#?#\n" +
+				"# #\n" +
+				"# #\n" +
+				"# #\n" +
+				"#^#\n" +
+				"###"));
+
+		assertFalse(toTest.getNextAction(world) instanceof Look);
 	}
 }
